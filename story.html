@@ -1,4 +1,264 @@
-<!-- فقط این قسمت را در بخش script جایگزین کن -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>حقیقت آشکار شد</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Vazirmatn',sans-serif;
+background:url('bride.png') center center/cover no-repeat;
+min-height:100vh;
+overflow-x:hidden;
+color:white;
+position:relative;
+animation:zoomBg 40s ease-in-out infinite alternate;
+}
+
+@keyframes zoomBg{
+from{
+background-size:100%;
+}
+to{
+background-size:115%;
+}
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.35);
+z-index:0;
+}
+
+#container{
+position:relative;
+z-index:2;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:25px;
+}
+
+#sceneBox{
+width:100%;
+max-width:900px;
+text-align:center;
+}
+
+.scene{
+font-size:32px;
+line-height:2;
+font-weight:600;
+opacity:0;
+transform:translateY(20px);
+transition:1s;
+white-space:pre-line;
+}
+
+.scene.show{
+opacity:1;
+transform:translateY(0);
+}
+
+#hint{
+position:fixed;
+bottom:25px;
+left:0;
+right:0;
+text-align:center;
+font-size:15px;
+color:#ddd;
+animation:pulse 2s infinite;
+z-index:5;
+}
+
+@keyframes pulse{
+50%{
+opacity:.4;
+}
+}
+
+#finalStory{
+display:none;
+max-width:900px;
+margin:auto;
+background:rgba(0,0,0,.35);
+backdrop-filter:blur(8px);
+padding:35px;
+border-radius:20px;
+text-align:right;
+line-height:2.3;
+font-size:18px;
+animation:fadeIn 1.5s;
+}
+
+#finalStory h1{
+text-align:center;
+margin-bottom:30px;
+font-size:40px;
+}
+
+#finalStory p{
+margin-bottom:22px;
+}
+
+#closed{
+text-align:center;
+font-size:28px;
+margin-top:40px;
+font-weight:bold;
+color:#ffdddd;
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+}
+to{
+opacity:1;
+}
+}
+
+.redReveal{
+font-size:48px;
+color:#ff4b4b;
+font-weight:bold;
+text-shadow:0 0 20px rgba(255,0,0,.7);
+}
+
+@media(max-width:768px){
+
+.scene{
+font-size:24px;
+}
+
+.redReveal{
+font-size:36px;
+}
+
+#finalStory{
+font-size:16px;
+padding:25px;
+}
+
+#finalStory h1{
+font-size:30px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="sceneBox">
+
+<div id="sceneText" class="scene show">
+حقیقت از آنچه همه تصور می‌کردند پیچیده‌تر بود...
+</div>
+
+<div id="finalStory">
+
+<h1>حقیقت آشکار شد</h1>
+
+<p>
+با آغاز تحقیقات، پرده از رازهای تاریک خاندان بومونت کنار می‌رود. نامه‌های مخفی، خیانت‌های پنهان، نفرت‌های قدیمی و دروغ‌هایی که سال‌ها پشت چهره‌ی اشرافی این خانواده دفن شده بودند، یکی پس از دیگری آشکار می‌شوند.
+</p>
+
+<p>
+در میان مدارک پزشکی قانونی نیز نشانه‌هایی از تعرض دیده می‌شود؛ سرنخی که انگشت اتهام را به سمت الیوت بومونت نشانه می‌رود. مردی که همیشه اشتباهات و رسوایی‌هایش توسط همسرش، الیزابت، پنهان شده بود.
+</p>
+
+<p>
+اما حقیقت از آنچه همه تصور می‌کنند پیچیده‌تر است.
+</p>
+
+<p>
+الیوت گناهکار است، اما قاتل نیست.
+</p>
+
+<p>
+وقتی الیزابت از خیانت همسرش و حقیقت تلخی که سال‌ها از او پنهان مانده بود آگاه می‌شود، چیزی در درونش فرو می‌ریزد. سال‌ها سکوت، تحقیر، چشم‌پوشی و سرپوش گذاشتن بر اشتباهات مردی که دوستش داشت، کم‌کم عقل و آرامش او را می‌بلعد. او دیگر نمی‌تواند میان حقیقت و خشم تمایزی قائل شود.
+</p>
+
+<p>
+در شب عروسی، هنگامی که همه در حال جشن گرفتن هستند، الیزابت با ذهنی آشفته و قلبی سرشار از نفرت، الا را روبه‌روی خود می‌بیند؛ دختری بی‌گناه که تنها در زمان و مکانی اشتباه قرار گرفته است.
+</p>
+
+<p>
+خشم کور و جنونی که سال‌ها در وجود الیزابت انباشته شده بود، در همان شب فوران می‌کند و سرنوشت الا را برای همیشه تغییر می‌دهد.
+</p>
+
+<p>
+اما خیانت تنها دلیل این جنایت نبود.
+</p>
+
+<p>
+الیزابت سال‌ها تلاش کرده بود دوست داشته شود. سال‌ها برای جلب محبت اطرافیان جنگیده بود، خود را تغییر داده بود، اشتباهات دیگران را پوشانده بود و رنج کشیده بود، اما در نهایت چیزی جز تحقیر، بی‌توجهی و خیانت نصیبش نشده بود.
+</p>
+
+<p>
+در مقابل، الا بدون هیچ تلاش خاصی، همان چیزی را داشت که الیزابت تمام عمر آرزویش را می‌کرد؛ محبوبیت، محبت دیگران و آینده‌ای روشن.
+</p>
+
+<p>
+این تفاوت، حسادتی خاموش اما ویرانگر را در قلب الیزابت پرورش داد؛ حسادتی که به مرور با درد خیانت درآمیخت و به جنونی غیرقابل کنترل تبدیل شد.
+</p>
+
+<p>
+در پایان مشخص می‌شود که قاتل واقعی الیزابت است؛ زنی که قربانی خیانت و دروغ شد و در نهایت خود به هیولایی تبدیل گشت که از آن متنفر بود.
+</p>
+
+<p>
+مرگ الا نه نتیجه‌ی یک نقشه‌ی ساده، بلکه حاصل فروپاشی روان انسانی است که سال‌ها زیر بار درد، حسادت و تحقیر زندگی کرده بود.
+</p>
+
+<p>
+حتی نشانه‌ها از همان ابتدا در برابر چشمان بازیکنان قرار داشتند. نمادهای مرموز روی جلد پرونده، تنها تزئینات یا سرنخ‌های بی‌اهمیت نیستند. آن‌ها به وسواس الیزابت برای نفرین کردن سرنوشت الا اشاره دارند.
+</p>
+
+<p>
+الیزابت پیش از شب قتل بارها به نمادها و آیین‌هایی روی آورده بود که به باور خودش می‌توانستند خوشبختی، عشق و آینده‌ی الا را نابود کنند. او نمی‌خواست فقط جان الا را بگیرد؛ می‌خواست زندگی او را نیز نفرین کند، رویای خوشبختی‌اش را درهم بشکند و آینده‌ای را که هرگز خودش نتوانسته بود داشته باشد، از او بگیرد.
+</p>
+
+<p>
+به همین دلیل ردپای این نفرین و طلسم‌ها در سراسر پرونده، از طراحی جلد گرفته تا روزنامه، دیده می‌شود؛ سرنخ‌هایی که از همان ابتدا حقیقت تاریک ذهن الیزابت را فاش می‌کردند.
+</p>
+
+<p>
+«عروس خونین» داستانی درباره رازهای خانوادگی، خیانت، جنون و این حقیقت تلخ است که گاهی هیولاها از ابتدا متولد نمی‌شوند؛ بلکه در سکوت، میان زخم‌های درمان‌نشده، حسادت‌های پنهان و سال‌ها رنج ساخته می‌شوند.
+</p>
+
+<div id="closed">
+پرونده بسته شد
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="hint">
+برای ادامه صفحه را لمس کنید
+</div>
 
 <script>
 
@@ -14,48 +274,40 @@ const scenes = [
 
 "او سال‌ها برای دیگران زندگی کرد...\n\nاما هرگز دوست داشته نشد.",
 
-'<div class="redReveal">قاتل...<br><br>الیزابت بومونت بود.</div>',
+'<div class="redReveal">قاتل...\n\nالیزابت بومونت بود.</div>',
 
 "اما این تنها بخشی از حقیقت بود..."
-
 ];
 
 let currentScene = 0;
-let isAnimating = false;
 
 const sceneText = document.getElementById("sceneText");
 const finalStory = document.getElementById("finalStory");
 const hint = document.getElementById("hint");
 
-document.body.addEventListener("click", () => {
+document.body.addEventListener("click",()=>{
 
-if (isAnimating) return;
-
-if (currentScene < scenes.length - 1) {
-
-isAnimating = true;
+if(currentScene < scenes.length-1){
 
 sceneText.classList.remove("show");
 
-setTimeout(() => {
+setTimeout(()=>{
 
 currentScene++;
 sceneText.innerHTML = scenes[currentScene];
 sceneText.classList.add("show");
 
-isAnimating = false;
+},400);
 
-}, 400);
+}else{
 
-} else {
-
-sceneText.style.display = "none";
-hint.style.display = "none";
-finalStory.style.display = "block";
+sceneText.style.display="none";
+hint.style.display="none";
+finalStory.style.display="block";
 
 window.scrollTo({
-top: 0,
-behavior: "smooth"
+top:0,
+behavior:"smooth"
 });
 
 }
@@ -63,3 +315,8 @@ behavior: "smooth"
 });
 
 </script>
+
+</body>
+</html>
+
+
