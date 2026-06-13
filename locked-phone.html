@@ -95,10 +95,8 @@ margin-top:10px;
 <source src="iphone_error.wav" type="audio/wav">
 </audio>
 
-<!-- دایره‌های رمز ۶ رقمی -->
+<!-- دایره‌های رمز 4 رقمی -->
 <div class="dots">
-  <div class="dot"></div>
-  <div class="dot"></div>
   <div class="dot"></div>
   <div class="dot"></div>
   <div class="dot"></div>
@@ -127,7 +125,7 @@ navigator.vibrate([100,50,100]);
 function unlock(){
 const pass = document.getElementById("pass").value;
 
-if(pass === "781022"){
+if(pass === "1022"){
 document.getElementById("unlockSound").play();
 setTimeout(()=>{
 window.location.href = "chat-evidence.html";
