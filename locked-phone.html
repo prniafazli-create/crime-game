@@ -136,9 +136,19 @@ margin-top:10px;
 
 <audio id="voice"><source src="kaya-voice.mp3" type="audio/mpeg"></audio><audio id="unlockSound"><source src="iphone_unlock_style_sound.wav" type="audio/wav"></audio><audio id="errorSound"><source src="iphone_error.wav" type="audio/wav"></audio>
 
-<div class="dots">  <div class="dot"></div>  <div class="dot"></div>  <div class="dot"></div>  <div class="dot"></div>  <div class="dot"></div>  <div class="dot"></div></div><input type="password" id="pass" placeholder="رمز عبور"><button onclick="unlock()">باز کردن قفل</button>
+<div class="dots">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
 
-<div class="msg" id="msg"></div></div><script>
+<input type="password" id="pass" placeholder="رمز عبور">
+<button onclick="unlock()">باز کردن قفل</button>
+
+<div class="msg" id="msg"></div></div>
+
+<script>
   
 function playVoice(){
   
