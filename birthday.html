@@ -64,10 +64,12 @@ body.flashBW {
   z-index:2;
 }
 
+/* پایین‌تر شدن صفحه اول */
 .lowBox {
   margin-top: 170px;
 }
 
+/* glitch */
 .glitch {
   animation: flicker 0.12s infinite;
 }
@@ -78,6 +80,7 @@ body.flashBW {
   100% {opacity:1;}
 }
 
+/* shake */
 .shake {
   animation: shake 0.25s infinite;
 }
@@ -90,6 +93,7 @@ body.flashBW {
   100% {transform: translate(1px,-1px);}
 }
 
+/* فلاش */
 .flash {
   position: fixed;
   width:100%;
@@ -101,12 +105,14 @@ body.flashBW {
   transition:0.1s;
 }
 
+/* اتهامات */
 #accusations {
   margin-top: 10px;
   line-height: 1.9;
   font-size: 15px;
 }
 
+/* عکس */
 .profile {
   width: 180px;
   height: 240px;
@@ -118,6 +124,7 @@ body.flashBW {
   transition: 1s;
 }
 
+/* گوشه‌ای شدن در صفحه 3 */
 #s3 .profile.show {
   position: absolute;
   top: 20px;
@@ -135,13 +142,13 @@ body.flashBW {
   z-index: 10;
 }
 
-/* اضافه شده برای متن صفحه آخر */
-.final-text {
-  position: relative;
-  z-index: 2;
-  line-height: 1.8;
+/* صفحه 2 ملایم‌تر (بدون فلیکر شدید) */
+.soft {
+  filter: none !important;
+  animation: none !important;
 }
 </style>
+
 </head>
 
 <body>
@@ -153,14 +160,13 @@ body.flashBW {
 <div id="s1" class="screen active" style="background-image:url('maz.png')">
   <div class="box lowBox">
 
-    <h2>CASE BOARD</h2>
-
-    <!-- اضافه شد -->
-    <p style="margin-bottom:15px; font-size:13px; opacity:0.9">
+    <p>
       تحت نظر از مدت ها قبل...<br>
       ارتباط با افراد ناشناس تایید شد.<br>
       تاریخ مهم: ۱۳۸۷/۴/۶
     </p>
+
+    <h2>عملیات:</h2>
 
     <p>
       یک شب در قطار، خواب و هذیان دست به دست هم دادند.<br>
@@ -179,7 +185,7 @@ body.flashBW {
 </div>
 
 <!-- ⚠ صفحه 2 -->
-<div id="s2" class="screen glitch shake" style="background:black">
+<div id="s2" class="screen" style="background:black">
   <div class="box">
     <p>⚠ پرونده اشتباهی باز شد…</p>
     <p>یا شاید… همان کسی که باید می‌بود وارد شد.</p>
@@ -192,8 +198,7 @@ body.flashBW {
 <div id="s3" class="screen" style="background-image:url('back.png')">
   <div class="box">
 
-    <!-- تیتر تغییر داده شد -->
-    <h2>عملیات: مطهره</h2>
+    <h2>مطهره</h2>
 
     <img src="mot.jpg" class="profile" id="profile">
 
@@ -206,7 +211,7 @@ body.flashBW {
 
 <!-- 📁 صفحه 4 -->
 <div id="s4" class="screen" style="background-image:url('mot.jpg')">
-  <div class="box final-text">
+  <div class="box">
 
     <h2>پرونده BD-0623</h2>
 
@@ -215,22 +220,18 @@ body.flashBW {
     <p>اتهامات:</p>
     <p id="accusations"></p>
 
-  </div>
-</div>
+    <button onclick="showFinal()">مشاهده مدرک نهایی</button>
 
-<!-- 🧩 صفحه آخر اضافه‌شده متن -->
-<div id="s5" class="screen" style="background:black">
-  <div class="box final-text">
-
-    <p>
+    <p id="finalMsg" style="display:none; margin-top:15px; line-height:1.9;">
       تمام سرنخ‌ها از اول به یک نفر ختم می‌شد...<br>
       نه مجرم.. نه قربانی...<br>
-      فقط کسی که ارزش ساختن یک پرونده برایش وجود داشت.
-    </p>
+      فقط کسی که ارزش ساختن یک پرونده برایش وجود داشت.<br><br>
 
-    <button onclick="alert('مشاهده مدرک نهایی:\nاین پرونده برای پیدا کردن قاتل نبود.. برای یادآوری آن بود که بعضی آدم‌ها آنقدر مهم اند که ارزش ساخت یک پرونده محرمانه را دارند.\n\nتولدت مبارک مطهره♥️')">
-      مشاهده مدرک نهایی
-    </button>
+      این پرونده برای پیدا کردن قاتل نبود..<br>
+      برای یادآوری آن بود که بعضی آدم‌ها آنقدر مهم اند که ارزش ساخت یک پرونده محرمانه را دارند.<br><br>
+
+      تولدت مبارک مطهره♥️
+    </p>
 
   </div>
 </div>
@@ -246,7 +247,7 @@ const accList = [
   "همیشه پشتم بود حتی وقتی همه منو مقصر می‌دونستن",
   "جا نزد وقتی خیلی‌ها رفتن...",
   "حتی وقتی دنیا ساکت بود، اون بود...",
-  "مطهره... همیشه پشتم بودی حتی وقتی همه منو مقصر می‌دونستن، خیلی وقتا تو منو باور داشتی و کلا جا نزدی وقتایی که خیلیای دیگه براشون مهم نبود..."
+  "مطهره... همیشه پشتم بودی..."
 ];
 
 let i=0, j=0;
@@ -269,20 +270,20 @@ function typeAcc(){
   }
 }
 
+/* فلش */
 function flashFX(){
   const f = document.getElementById("flash");
   f.style.opacity = 0.7;
   setTimeout(()=>f.style.opacity=0,120);
 }
 
+/* تغییر صفحه */
 function next(n){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("s"+n).classList.add("active");
 
   if(n === 2){
-    document.body.classList.add("flashBW");
     flashFX();
-    setTimeout(()=>document.body.classList.remove("flashBW"), 400);
   }
 
   if(n === 3){
@@ -298,12 +299,14 @@ function next(n){
       typeAcc();
     }, 800);
   }
-
-  if(n === 5){
-    // هیچ انیمیشن اضافی نیاز نیست
-  }
 }
 
+/* پایان نهایی */
+function showFinal(){
+  document.getElementById("finalMsg").style.display = "block";
+}
+
+/* چک معما */
 function checkRiddle(){
   let val = document.getElementById("riddle").value.trim();
 
