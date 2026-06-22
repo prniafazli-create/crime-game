@@ -93,7 +93,7 @@ body.flashBW {
   100% {transform: translate(1px,-1px);}
 }
 
-/* فلاش */
+/* فلاش سینمایی قوی */
 .flash {
   position: fixed;
   width:100%;
@@ -102,7 +102,7 @@ body.flashBW {
   opacity:0;
   pointer-events:none;
   z-index:999;
-  transition:0.1s;
+  transition:0.12s;
 }
 
 /* اتهامات */
@@ -112,10 +112,10 @@ body.flashBW {
   font-size: 15px;
 }
 
-/* عکس */
+/* عکس سه‌درچهار درست */
 .profile {
-  width: 180px;
-  height: 240px;
+  width: 160px;
+  height: 210px;
   object-fit: cover;
   border-radius: 10px;
   border: 2px solid white;
@@ -124,7 +124,7 @@ body.flashBW {
   transition: 1s;
 }
 
-/* گوشه‌ای شدن در صفحه 3 */
+/* گوشه‌ای شدن */
 #s3 .profile.show {
   position: absolute;
   top: 20px;
@@ -141,6 +141,16 @@ body.flashBW {
   opacity: 0.8;
   z-index: 10;
 }
+
+/* دکمه نهایی */
+.finalBtn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: crimson;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
 </style>
 </head>
 
@@ -153,7 +163,13 @@ body.flashBW {
 <div id="s1" class="screen active" style="background-image:url('maz.png')">
   <div class="box lowBox">
 
-    <h2>CASE BOARD</h2>
+    <h2>عملیات</h2>
+
+    <p>
+      تحت نظر از مدت‌ها قبل...<br>
+      ارتباط با افراد ناشناس تأیید شد.<br>
+      تاریخ مهم: ۱۳۸۷/۴/۶
+    </p>
 
     <p>
       یک شب در قطار، خواب و هذیان دست به دست هم دادند.<br>
@@ -166,8 +182,6 @@ body.flashBW {
     <br>
     <button onclick="checkRiddle()">ورود به پرونده</button>
 
-    <p id="msg"></p>
-
   </div>
 </div>
 
@@ -176,7 +190,6 @@ body.flashBW {
   <div class="box">
     <p>⚠ پرونده اشتباهی باز شد…</p>
     <p>یا شاید… همان کسی که باید می‌بود وارد شد.</p>
-
     <button onclick="next(3)">ادامه</button>
   </div>
 </div>
@@ -206,6 +219,25 @@ body.flashBW {
 
     <p>اتهامات:</p>
     <p id="accusations"></p>
+
+  </div>
+</div>
+
+<!-- 🎉 صفحه آخر -->
+<div id="s5" class="screen" style="background-image:url('back.png')">
+  <div class="box">
+
+    <h2>CASE CLOSED</h2>
+
+    <p>
+      تمام سرنخ‌ها از اول به یک نفر ختم می‌شد...<br>
+      نه مجرم.. نه قربانی...<br>
+      فقط کسی که ارزش ساختن یک پرونده برایش وجود داشت.
+    </p>
+
+    <button class="finalBtn" onclick="finalLetter()">مشاهده مدرک نهایی</button>
+
+    <p id="final"></p>
 
   </div>
 </div>
@@ -244,14 +276,12 @@ function typeAcc(){
   }
 }
 
-/* فلش */
 function flashFX(){
   const f = document.getElementById("flash");
-  f.style.opacity = 0.7;
+  f.style.opacity = 0.8;
   setTimeout(()=>f.style.opacity=0,120);
 }
 
-/* تغییر صفحه */
 function next(n){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("s"+n).classList.add("active");
@@ -279,10 +309,18 @@ function next(n){
 
 function checkRiddle(){
   let val = document.getElementById("riddle").value.trim();
-
   if(val === "شهروک"){
     setTimeout(()=>next(2), 600);
   }
+}
+
+function finalLetter(){
+  document.getElementById("final").innerHTML = `
+  این پرونده برای پیدا کردن قاتل نبود..<br>
+  برای یادآوری آن بود که بعضی آدم‌ها آنقدر مهم اند<br>
+  که ارزش ساخت یک پرونده محرمانه را دارند.<br><br>
+  ❤️ تولدت مبارک مطهره ❤️
+  `;
 }
 
 </script>
