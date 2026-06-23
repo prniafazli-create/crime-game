@@ -13,7 +13,7 @@ body{
   overflow:hidden;
 }
 
-/* بک‌گراند بدون محو */
+/* بک‌گراند */
 .bg{
   position:fixed;
   inset:0;
@@ -22,7 +22,6 @@ body{
   z-index:-2;
 }
 
-/* لایه تیره */
 .overlay{
   position:fixed;
   inset:0;
@@ -30,57 +29,57 @@ body{
   z-index:-1;
 }
 
-/* متن‌ها */
-.container{
-  width:100%;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  flex-direction:column;
-  padding:20px;
-}
-
+/* متن‌ها (درشت‌تر) */
 .text{
-  font-size:28px;
-  line-height:2.2;
+  font-size:30px;   /* 👈 بزرگ‌تر شد */
+  line-height:2.3;
   opacity:0;
   transition:1s;
 }
 
-/* کیس کلوزد فول اسکرین */
+/* کیس کلوزد */
 #closed{
   position:fixed;
   inset:0;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:50px;
+  font-size:90px;   /* 👈 خیلی درشت */
   font-weight:bold;
   opacity:0;
-  background:rgba(0,0,0,0.7);
-  z-index:10;
+  background:rgba(255,0,0,0.85); /* 👈 قرمز واقعی */
+  z-index:999;
+  color:white;
 }
 
-/* متن نهایی */
-#finalText{
-  font-size:30px;
-  line-height:2.3;
-  opacity:1;
-}
-
-/* لرزش */
+/* لرزش واقعی */
 .shake{
-  animation: shake 0.1s infinite;
+  animation: shake 0.08s infinite;
 }
 
 @keyframes shake{
   0%{transform:translate(0,0);}
-  25%{transform:translate(2px,-2px);}
-  50%{transform:translate(-2px,2px);}
-  75%{transform:translate(2px,2px);}
+  25%{transform:translate(6px,-6px);}
+  50%{transform:translate(-6px,6px);}
+  75%{transform:translate(6px,6px);}
   100%{transform:translate(0,0);}
+}
+
+/* پایان */
+#end{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  flex-direction:column;
+  opacity:0;
+}
+
+#finalText{
+  font-size:32px;  /* 👈 خیلی درشت‌تر */
+  line-height:2.5;
 }
 </style>
 </head>
@@ -93,13 +92,9 @@ body{
 <div class="container">
 
   <div id="t1" class="text">تحقیقات تکمیل شد…</div>
-
   <div id="t2" class="text">نتیجه:</div>
-
   <div id="t3" class="text">مظنون مجرم نیست.</div>
-
   <div id="t4" class="text">قربانی هم نیست.</div>
-
   <div id="t5" class="text">پس چرا این پرونده تشکیل شد؟</div>
 
 </div>
@@ -108,7 +103,7 @@ body{
 <div id="closed">CASE CLOSED</div>
 
 <!-- پایان -->
-<div id="end" class="container" style="opacity:0;">
+<div id="end">
   <div id="finalText">
     تمام سرنخ‌ها از ابتدا به یک نفر ختم می‌شد…<br><br>
 
@@ -122,6 +117,9 @@ body{
   </div>
 </div>
 
+<!-- صدا -->
+<audio id="sound" src="stamp.mp3"></audio>
+
 <script>
 
 const texts = ["t1","t2","t3","t4","t5"];
@@ -132,7 +130,6 @@ function showText(){
   if(i < texts.length){
     document.getElementById(texts[i]).style.opacity = 1;
     i++;
-
     setTimeout(showText, 2200);
   } else {
     triggerCaseClosed();
@@ -142,15 +139,16 @@ function showText(){
 function triggerCaseClosed(){
 
   let closed = document.getElementById("closed");
-  closed.style.opacity = 1;
+  let sound = document.getElementById("sound");
 
+  sound.play();
+
+  closed.style.opacity = 1;
   document.body.classList.add("shake");
 
-  // بعد از 2.5 ثانیه محو
   setTimeout(()=>{
     closed.style.opacity = 0;
     document.body.classList.remove("shake");
-
     showFinal();
   }, 2500);
 }
@@ -161,12 +159,11 @@ function showFinal(){
 
   setTimeout(()=>{
     document.getElementById("end").style.opacity = 1;
-    document.getElementById("finalText").style.opacity = 1;
-  }, 1000);
+  }, 800);
 }
 
 window.onload = ()=>{
-  setTimeout(showText, 1200);
+  setTimeout(showText, 1000);
 };
 
 </script>
