@@ -26,56 +26,48 @@ body{
   top:40%;
   width:100%;
   text-align:center;
-  font-size:28px;
+  font-size:18px;
   opacity:0;
-  padding:0 20px;
-  line-height:1.6;
+  transition:0.8s;
 }
 
+/* وقتی نمایش داده میشه */
 .show{
-  animation:fadeText 3s forwards;
+  opacity:1;
 }
 
-@keyframes fadeText{
-  0%{opacity:0;}
-  20%{opacity:1;}
-  80%{opacity:1;}
-  100%{opacity:1;} /* دیگر محو نمی‌شود */
+/* وقتی باید بره */
+.hide{
+  opacity:0;
 }
 
-/* باکس معما */
+/* باکس معما (بالا‌تر آورده شد) */
 .puzzle-box{
   position:absolute;
-  bottom:-300px;
+  bottom:-200px;
   left:50%;
   transform:translateX(-50%);
-  width:420px;
-  min-height:260px;
-  background:rgba(0,0,0,0.9);
-  border:1px solid #555;
-  padding:20px;
+  width:80%;
+  background:rgba(0,0,0,0.85);
+  border:1px solid #444;
+  padding:15px;
   transition:0.8s;
   text-align:center;
-  border-radius:10px;
 }
 
-/* نمایش باکس */
 .puzzle-box.show{
-  bottom:120px;
+  bottom:80px; /* 👈 بالاتر آمد */
 }
 
-/* input */
 input{
-  width:80%;
+  width:70%;
   padding:10px;
-  margin-top:15px;
+  margin-top:10px;
   text-align:center;
   border:none;
   outline:none;
-  border-radius:5px;
 }
 
-/* button */
 button{
   margin-top:10px;
   padding:10px 15px;
@@ -83,9 +75,7 @@ button{
   color:white;
   border:none;
   cursor:pointer;
-  border-radius:5px;
 }
-
 button:hover{
   background:#aa0000;
 }
@@ -101,30 +91,24 @@ button:hover{
 <div id="t2" class="text">ارتباط با افراد ناشناس تأیید شد.</div>
 <div id="t3" class="text">تاریخ مهم: ۱۳۸۷/۴/۶</div>
 
-<div id="t4" class="text">
-یک شب در قطار، خواب و هذیان دست به دست هم دادند.
-</div>
+<div id="t4" class="text">یک شب در قطار، خواب و هذیان دست به دست هم دادند.</div>
 
 <div id="t5" class="text">
 بازیگر فیلمی که در سفر نهم دیده بودیم،
 با مشهورترین کارآگاه جهان یکی شد.
 </div>
 
-<div id="t6" class="text">
-حاصل این پیوند پنج‌حرفی چیست؟
-</div>
+<div id="t6" class="text">حاصل این پیوند پنج‌حرفی چیست؟</div>
 
 <!-- باکس معما -->
 <div class="puzzle-box" id="box">
-
   <div>
     یک شب در قطار، خواب و هذیان دست به دست هم دادند...<br>
     حاصل این پیوند پنج‌حرفی چیست؟
   </div>
 
-  <input id="answer" placeholder="پاسخ را وارد کنید">
+  <input id="answer" placeholder="پاسخ...">
   <button onclick="check()">تأیید</button>
-
 </div>
 
 <script>
@@ -134,8 +118,10 @@ let i = 0;
 
 function showNext(){
 
+  // 👈 متن قبلی حتماً محو میشه
   if(i > 0){
-    document.getElementById(texts[i-1]).style.opacity = 1;
+    document.getElementById(texts[i-1]).classList.remove("show");
+    document.getElementById(texts[i-1]).classList.add("hide");
   }
 
   if(i < texts.length){
@@ -156,14 +142,9 @@ function check(){
   let val = document.getElementById("answer").value.trim();
 
   if(val === "شهروک"){
-    document.getElementById("box").innerHTML = "✔ پاسخ صحیح...";
-
-    setTimeout(()=>{
-      window.location.href = "day.html";
-    },1200);
-
+    window.location.href = "day.html";
   } else {
-    alert("✖ پاسخ اشتباه است");
+    alert("✖ اشتباه است");
   }
 }
 
