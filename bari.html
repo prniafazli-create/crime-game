@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>CASE CLOSED</title>
+
+<style>
+body{
+  margin:0;
+  font-family:"Tahoma","Vazirmatn","Arial";
+  direction:rtl;
+  color:white;
+  overflow:hidden;
+}
+
+/* بک‌گراند بدون محو */
+.bg{
+  position:fixed;
+  inset:0;
+  background:url("bar.png") no-repeat center center;
+  background-size:cover;
+  z-index:-2;
+}
+
+/* لایه تیره */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  z-index:-1;
+}
+
+/* متن‌ها */
+.container{
+  width:100%;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  flex-direction:column;
+  padding:20px;
+}
+
+.text{
+  font-size:22px;
+  line-height:2;
+  opacity:0;
+  transition:1s;
+}
+
+/* کیس کلوزد فول اسکرین */
+#closed{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:50px;
+  font-weight:bold;
+  opacity:0;
+  background:rgba(0,0,0,0.7);
+  z-index:10;
+}
+
+/* لرزش */
+.shake{
+  animation: shake 0.1s infinite;
+}
+
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(2px,-2px);}
+  50%{transform:translate(-2px,2px);}
+  75%{transform:translate(2px,2px);}
+  100%{transform:translate(0,0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="container">
+
+  <div id="t1" class="text">تحقیقات تکمیل شد…</div>
+
+  <div id="t2" class="text">نتیجه:</div>
+
+  <div id="t3" class="text">مظنون مجرم نیست.</div>
+
+  <div id="t4" class="text">قربانی هم نیست.</div>
+
+  <div id="t5" class="text">پس چرا این پرونده تشکیل شد؟</div>
+
+</div>
+
+<!-- CASE CLOSED -->
+<div id="closed">CASE CLOSED</div>
+
+<!-- پایان -->
+<div id="end" class="container" style="opacity:0;">
+  <div class="text" id="finalText">
+    تمام سرنخ‌ها از ابتدا به یک نفر ختم می‌شد…<br><br>
+
+    نه یک مجرم.<br>
+    نه یک قربانی.<br><br>
+
+    بلکه کسی که ارزش داشت برایش یک پرونده اختصاصی ساخته شود.<br><br>
+
+    🎂♥️ تولدت مبارک مطهره
+  </div>
+</div>
+
+<script>
+
+const texts = ["t1","t2","t3","t4","t5"];
+let i = 0;
+
+function showText(){
+
+  if(i < texts.length){
+    document.getElementById(texts[i]).style.opacity = 1;
+    i++;
+
+    setTimeout(showText, 2200);
+  } else {
+    triggerCaseClosed();
+  }
+}
+
+function triggerCaseClosed(){
+
+  let closed = document.getElementById("closed");
+  closed.style.opacity = 1;
+
+  document.body.classList.add("shake");
+
+  // بعد از 2.5 ثانیه محو
+  setTimeout(()=>{
+    closed.style.opacity = 0;
+    document.body.classList.remove("shake");
+
+    showFinal();
+  }, 2500);
+}
+
+function showFinal(){
+
+  document.querySelector(".container").style.opacity = 0;
+
+  setTimeout(()=>{
+    document.getElementById("end").style.opacity = 1;
+  }, 1000);
+}
+
+window.onload = ()=>{
+  setTimeout(showText, 1200);
+};
+
+</script>
+
+</body>
+</html>
