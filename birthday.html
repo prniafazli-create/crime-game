@@ -26,8 +26,10 @@ body{
   top:40%;
   width:100%;
   text-align:center;
-  font-size:18px;
+  font-size:28px;
   opacity:0;
+  padding:0 20px;
+  line-height:1.6;
 }
 
 .show{
@@ -37,37 +39,43 @@ body{
 @keyframes fadeText{
   0%{opacity:0;}
   20%{opacity:1;}
-  70%{opacity:1;}
-  100%{opacity:0;}
+  80%{opacity:1;}
+  100%{opacity:1;} /* دیگر محو نمی‌شود */
 }
 
 /* باکس معما */
 .puzzle-box{
   position:absolute;
-  bottom:-250px;
+  bottom:-300px;
   left:50%;
   transform:translateX(-50%);
-  width:80%;
-  background:rgba(0,0,0,0.85);
-  border:1px solid #444;
-  padding:15px;
+  width:420px;
+  min-height:260px;
+  background:rgba(0,0,0,0.9);
+  border:1px solid #555;
+  padding:20px;
   transition:0.8s;
   text-align:center;
+  border-radius:10px;
 }
 
+/* نمایش باکس */
 .puzzle-box.show{
-  bottom:40px;
+  bottom:120px;
 }
 
+/* input */
 input{
-  width:70%;
+  width:80%;
   padding:10px;
-  margin-top:10px;
+  margin-top:15px;
   text-align:center;
   border:none;
   outline:none;
+  border-radius:5px;
 }
 
+/* button */
 button{
   margin-top:10px;
   padding:10px 15px;
@@ -75,7 +83,9 @@ button{
   color:white;
   border:none;
   cursor:pointer;
+  border-radius:5px;
 }
+
 button:hover{
   background:#aa0000;
 }
@@ -104,7 +114,7 @@ button:hover{
 حاصل این پیوند پنج‌حرفی چیست؟
 </div>
 
-<!-- باکس معما (سوال + جواب با هم) -->
+<!-- باکس معما -->
 <div class="puzzle-box" id="box">
 
   <div>
@@ -125,7 +135,7 @@ let i = 0;
 function showNext(){
 
   if(i > 0){
-    document.getElementById(texts[i-1]).style.opacity = 0;
+    document.getElementById(texts[i-1]).style.opacity = 1;
   }
 
   if(i < texts.length){
@@ -146,7 +156,6 @@ function check(){
   let val = document.getElementById("answer").value.trim();
 
   if(val === "شهروک"){
-    // افکت کوتاه
     document.getElementById("box").innerHTML = "✔ پاسخ صحیح...";
 
     setTimeout(()=>{
@@ -162,4 +171,3 @@ function check(){
 
 </body>
 </html>
-  
