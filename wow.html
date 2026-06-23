@@ -11,6 +11,7 @@ body{
   color:white;
   font-family:sans-serif;
   overflow:hidden;
+  direction:rtl; /* 👈 RTL اضافه شد */
 }
 
 /* بک‌گراند */
@@ -41,11 +42,11 @@ body{
   position:relative;
 }
 
-/* 👇 فقط جابجایی عکس به راست (واضح‌تر) */
+/* 👇 عکس منتقل شد به چپ */
 .photo{
   position:absolute;
   top:20px;
-  right:20px; /* تأکید روی سمت راست */
+  left:20px; /* 👈 تغییر از right به left */
   width:120px;
   height:160px;
   background:url("mot.jpg") no-repeat center center;
@@ -109,7 +110,7 @@ body{
 
     <div class="title">پرونده شماره BD-XXXX</div>
 
-    <div class="text"><b>مظنون:</b> [اسم دختر]</div>
+    <div class="text"><b>مظنون:</b> مطهره</div> <!-- 👈 تغییر اسم -->
 
     <div class="text"><b>اتهامات:</b></div>
 
