@@ -4,12 +4,8 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport"
-content="width=device-width,
-initial-scale=1.0,
-maximum-scale=1.0,
-user-scalable=no">
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Clown Phone</title>
 
@@ -21,217 +17,95 @@ user-scalable=no">
 
 <div class="phone">
 
-<div class="screen">
+<div class="wallpaper"></div>
 
-<!-- والپیپر -->
-
-<img
-src="oh.png"
-class="wallpaper">
-
-<!-- لایه تیره -->
-
-<div class="dark-layer"></div>
-
-<!-- Status Bar -->
+<div class="screen-dark"></div>
 
 <div class="status-bar">
 
-<div class="left-status">
+<div class="status-left">
 
-<span id="clock">
-22:41
-</span>
+<span id="clock">03:48</span>
 
 </div>
 
-<div class="right-status">
+<div class="status-right">
 
-<span class="signal">
-📶
-</span>
+<span id="network">4G</span>
 
-<span class="network">
-4G
-</span>
+<span id="signal">📶</span>
 
-<span class="wifi">
-📡
-</span>
+<span id="wifi">📡</span>
 
-<span class="battery">
-87%
-🔋
-</span>
+<span id="batteryText">75%</span>
+
+<span id="battery">🔋</span>
 
 </div>
 
 </div>
 
-<!-- وسط صفحه -->
+<div class="lock-area">
 
-<div class="lock-center">
-
-<div class="lock-title">
-
-Harley's Phone
-
+<div class="lock-icon">
+🔒
 </div>
 
-<div class="lock-date"
-id="date">
-
-Friday
-
+<div id="bigClock" class="big-clock">
+03:48
 </div>
 
-<div class="lock-time"
-id="bigClock">
-
-22:41
-
+<div id="date" class="date">
+چهارشنبه، ۲۵ تیر
 </div>
 
 </div>
 
-<!-- نوتیفیکیشن -->
+<div class="notification">
 
-<div class="notifications">
+<div class="notification-title">
+⚠ اعلان جدید
+</div>
 
-<div class="notify">
-
-🎭
-۱ پیام خوانده نشده
-
+<div class="notification-text">
+یک پیام خوانده‌نشده وجود دارد...
 </div>
 
 </div>
 
-<!-- قسمت Pattern -->
-
-<div class="pattern-area">
-
-<div id="pattern">
-
-<!--
-در قسمت بعد
-۹ نقطه واقعی
-اینجا قرار می‌گیرند
--->
-
-</div>
-  <div id="pattern" class="pattern-grid">
-
-<div class="pattern-dot" data-id="1"></div>
-<div class="pattern-dot" data-id="2"></div>
-<div class="pattern-dot" data-id="3"></div>
-
-<div class="pattern-dot" data-id="4"></div>
-<div class="pattern-dot" data-id="5"></div>
-<div class="pattern-dot" data-id="6"></div>
-
-<div class="pattern-dot" data-id="7"></div>
-<div class="pattern-dot" data-id="8"></div>
-<div class="pattern-dot" data-id="9"></div>
-
-<svg
-id="patternLines"
-class="pattern-lines"
-width="100%"
-height="100%">
-
-<polyline
-id="line"
-points=""
-fill="none"
-stroke="#ffffff"
-stroke-width="8"
-stroke-linecap="round"
-stroke-linejoin="round"/>
-
-</svg>
-
-</div>
-
-<!-- دکمه اضطراری -->
-
-<div class="emergency-button">
-
-☎ تماس اضطراری
-
-</div>
-
-<!-- دوربین -->
-
-<div class="camera-shortcut">
-
-📷
-
-</div>
-
-<!-- چراغ قوه -->
-
-<div class="flash-shortcut">
-
-🔦
-
-</div>
-
-<!-- اثر نور روی صفحه -->
-
-<div class="screen-light"></div>
-
-<!-- افکت روشن بودن OLED -->
-
-<div class="oled-overlay"></div>
-
-<!-- صدای ویبره -->
-
-<audio
-id="unlockSound">
-
-<source
-src="unlock.mp3"
-type="audio/mpeg">
-
-</audio>
-
-<audio
-id="errorSound">
-
-<source
-src="error.mp3"
-type="audio/mpeg">
-
-</audio>
-
-</div>
-
-</div>
-
-<script src="phone.js"></script>
-
-</body>
-
-</html>
-
-</div>
-
-<!-- پایین صفحه -->
-
-<div class="bottom-text">
+<div class="pattern-text">
 
 برای باز کردن قفل
-الگو را رسم کنید
+
+<br>
+
+الگوی ستاره را رسم کنید
 
 </div>
 
+<div class="pattern-container">
+
+<div class="dot" data-id="1"></div>
+<div class="dot" data-id="2"></div>
+<div class="dot" data-id="3"></div>
+
+<div class="dot" data-id="4"></div>
+<div class="dot" data-id="5"></div>
+<div class="dot" data-id="6"></div>
+
+<div class="dot" data-id="7"></div>
+<div class="dot" data-id="8"></div>
+<div class="dot" data-id="9"></div>
+
+<canvas id="patternCanvas"></canvas>
+
 </div>
+
+<div class="home-bar"></div>
 
 </div>
 
 <script src="phone.js"></script>
 
 </body>
-
 </html>
