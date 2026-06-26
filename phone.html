@@ -56,7 +56,7 @@ body{
   font-weight:300;
 }
 
-/* ===== NOTIFICATION (NEW) ===== */
+/* ===== NOTIFICATION ===== */
 #notif{
   position:absolute;
   top:-80px;
@@ -76,6 +76,12 @@ body{
 #notif.show{
   top:110px;
   opacity:1;
+}
+
+/* 👇 NEW: fade out */
+#notif.hide{
+  top:110px;
+  opacity:0;
 }
 
 /* ===== TOP TIME ===== */
@@ -171,7 +177,7 @@ body{
     </div>
 
     <!-- NOTIFICATION -->
-    <div id="notif">📩 Unread Message: Unknown — "Don't try the pattern..."</div>
+    <div id="notif">📩 پیام خوانده‌نشده: «به الگو دست نزن...»</div>
 
     <!-- TIME -->
     <div id="top">
@@ -220,9 +226,15 @@ function updateTime(){
 setInterval(updateTime,1000);
 updateTime();
 
-/* ===== SHOW NOTIFICATION ===== */
+/* ===== NOTIFICATION SHOW + AUTO HIDE */
 setTimeout(()=>{
-  document.getElementById("notif").classList.add("show");
+  const notif = document.getElementById("notif");
+  notif.classList.add("show");
+
+  setTimeout(()=>{
+    notif.classList.add("hide");
+  }, 4000);
+
 },1500);
 
 /* ===== PATTERN ===== */
