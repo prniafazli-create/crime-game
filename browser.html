@@ -2,268 +2,193 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>Secure Chrome</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مرورگر پرونده</title>
 
 <style>
 body{
   margin:0;
-  font-family:system-ui;
-  background:#0b0b10;
-  color:#fff;
+  font-family:sans-serif;
+  background:#0f0f0f;
+  color:white;
+  overflow:hidden;
 }
 
 /* TOP BAR */
-.topbar{
+#top{
   display:flex;
   align-items:center;
-  gap:6px;
   padding:10px;
-  background:#141420;
-  border-bottom:1px solid #222;
+  background:#1a1a1a;
 }
 
-.icon{
-  background:#1f1f2e;
-  border:none;
-  color:#fff;
-  padding:8px 10px;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.url{
+#url{
   flex:1;
-  background:#1c1c2a;
-  border:none;
-  color:#fff;
   padding:10px;
-  border-radius:12px;
+  border:none;
   outline:none;
+  border-radius:8px;
 }
 
-/* HISTORY PANEL */
-.history{
+button{
+  margin-left:10px;
+  padding:10px 15px;
+  background:red;
+  color:white;
+  border:none;
+  border-radius:8px;
+}
+
+/* HISTORY */
+#history{
+  position:absolute;
+  top:60px;
+  left:10px;
+  right:10px;
+  bottom:10px;
+  overflow:auto;
   padding:10px;
 }
 
 .item{
-  background:#161625;
-  padding:12px;
-  margin:8px 0;
-  border-radius:12px;
-  border-left:3px solid #00ff9d;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.item:hover{
-  transform:scale(1.01);
-  background:#1d1d33;
-}
-
-/* LOADING */
-.loading{
-  color:#00ff9d;
+  background:#222;
   padding:10px;
-  animation:blink 1s infinite;
+  margin-bottom:8px;
+  border-radius:8px;
+  font-size:14px;
 }
 
-@keyframes blink{
-  50%{opacity:0.3;}
+/* GLITCH */
+.glitch{
+  animation:flicker 0.2s infinite;
 }
 
-/* BOTTOM NAV */
-.navbar{
+@keyframes flicker{
+  0%{opacity:1}
+  50%{opacity:0.6}
+  100%{opacity:1}
+}
+
+/* SECRET */
+#secret{
   position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:60px;
-  background:#141420;
-  border-top:1px solid #222;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-}
-
-.nav{
-  color:#aaa;
-  font-size:13px;
-  cursor:pointer;
-}
-
-.nav:hover{
-  color:#fff;
-}
-
-/* NOTIFICATION */
-.notif{
-  position:fixed;
-  top:10px;
-  right:10px;
-  background:#1c1c2a;
-  border-left:3px solid #ff2e63;
-  padding:10px;
-  border-radius:10px;
-  display:none;
-  max-width:260px;
-  font-size:13px;
-  animation:fade .3s ease;
-}
-
-@keyframes fade{
-  from{opacity:0; transform:translateY(-5px);}
-  to{opacity:1; transform:translateY(0);}
+  bottom:10px;
+  left:10px;
+  font-size:12px;
+  opacity:0.3;
 }
 </style>
 </head>
 
 <body>
 
-<!-- NOTIFICATION -->
-<div id="notif" class="notif"></div>
-
-<!-- TOP BAR -->
-<div class="topbar">
-  <button class="icon" onclick="home()">🏠</button>
-  <button class="icon" onclick="back()">⬅</button>
-  <input id="search" class="url" placeholder="جستجو در تاریخچه..." />
-  <button class="icon" onclick="runSearch()">GO</button>
+<div id="top">
+  <input id="url" placeholder="جستجو کنید..." />
+  <button onclick="search()">جستجو</button>
 </div>
 
-<!-- HISTORY -->
-<div id="history" class="history"></div>
-
-<!-- BOTTOM NAV -->
-<div class="navbar">
-  <div class="nav" onclick="home()">Home</div>
-  <div class="nav" onclick="back()">Back</div>
-  <div class="nav" onclick="addTab()">Tabs</div>
-  <div class="nav" onclick="reload()">Reload</div>
-</div>
+<div id="history"></div>
+<div id="secret">CASE FILE ACTIVE...</div>
 
 <script>
 
-/* ===== HISTORY واقعی-نما (فقط داستانی) ===== */
-let historyData = [
-  "چگونه دل کسی را به دست بیاورم",
-  "چرا بعضی آدم‌ها ناگهان سرد می‌شوند",
-  "معنی سکوت طولانی در رابطه چیست",
-  "چطور فراموش کنیم کسی را",
-  "نشانه‌های تغییر رفتار ناگهانی انسان"
+const historyBox = document.getElementById("history");
+const input = document.getElementById("url");
+
+let searches = JSON.parse(localStorage.getItem("history") || "[]");
+
+const darkSearches = [
+"چگونه ردپا را پاک کنیم",
+"چرا کسی پشت سر من ایستاده",
+"صداهای ناشناخته در خانه",
+"چه کسی وارد تاریخچه من شده",
+"چرا تلفن خود به خود روشن می‌شود",
+"آخرین کسی که اینجا بود کجاست",
+"اگر کسی تو را زیر نظر داشته باشد"
 ];
 
-/* render history */
 function render(){
-  const box = document.getElementById("history");
-  box.innerHTML = "";
-
-  historyData.forEach((h, i)=>{
-    const d = document.createElement("div");
-    d.className = "item";
-    d.innerText = h;
-
-    d.onclick = ()=>{
-      showFakePage(h);
-    };
-
-    box.appendChild(d);
+  historyBox.innerHTML = "";
+  searches.slice().reverse().forEach(t=>{
+    const div = document.createElement("div");
+    div.className = "item glitch";
+    div.innerText = "🔎 " + t;
+    historyBox.appendChild(div);
   });
 }
+
 render();
 
-/* ===== SEARCH ===== */
-function runSearch(){
-  const q = document.getElementById("search").value;
+function search(){
 
-  const box = document.getElementById("history");
-  box.innerHTML = "<div class='loading'>در حال جستجو در تاریخچه...</div>";
+  let value = input.value;
+  if(!value) return;
 
-  setTimeout(()=>{
-    const newItem = q;
+  searches.push(value);
 
-    historyData.unshift(newItem);
-    render();
+  if(Math.random() > 0.4){
+    searches.push(darkSearches[Math.floor(Math.random()*darkSearches.length)]);
+  }
 
-    // random system event
-    systemEvent();
-
-  }, 900);
+  localStorage.setItem("history", JSON.stringify(searches));
+  input.value = "";
+  render();
 }
 
-/* ===== FAKE PAGE OPEN ===== */
-function showFakePage(text){
-  document.getElementById("history").innerHTML = `
-    <div class="item">
-📄 صفحه باز شده
+/* =========================
+   🌐 LIVE BROWSER ENGINE
+========================= */
 
-${text}
+function fakeType(){
 
----------------------
-وضعیت: ذخیره شده در حافظه مرورگر
-زمان همگام‌سازی: نامشخص
-    </div>
-  `;
-}
-
-/* ===== SYSTEM EVENTS (ترس subtle) ===== */
-function systemEvent(){
-
-  const events = [
-    "تاریخچه شما در حال همگام‌سازی با سرور ناشناخته است",
-    "یک دستگاه دیگر به این مرورگر متصل شد",
-    "داده‌های ذخیره‌شده در حال بازنویسی هستند",
-    "یک نشست قدیمی دوباره فعال شد",
-    "فعالیت غیرعادی در تاریخچه شناسایی شد"
+  const texts = [
+    "کجای روستا خلوت‌ترین جاست",
+    "چگونه خوشتیپ استایل بزنم",
+    "چگونه یه دختر را خوشحال کنم",
+    "خرید گل برای کسی که نمی‌شناسم",
+    "چه کسی تاریخچه من را تغییر داد",
+    "چرا مرورگر رفتار عجیبی دارد"
   ];
 
-  if(Math.random() > 0.3){
-    showNotif(events[Math.floor(Math.random()*events.length)]);
-  }
+  let text = texts[Math.floor(Math.random()*texts.length)];
+  input.value = "";
 
-  // sometimes inject fake history entry
-  if(Math.random() > 0.6){
-    setTimeout(()=>{
-      historyData.push("این جستجو از دستگاه دیگر وارد شده است");
-      render();
-    }, 1200);
-  }
+  let i = 0;
+  let typing = setInterval(()=>{
+
+    input.value += text[i];
+    i++;
+
+    if(i >= text.length){
+      clearInterval(typing);
+
+      setTimeout(()=>{
+        search();
+      }, 700);
+    }
+
+  }, 70);
 }
 
-/* ===== NOTIFICATION (فارسی) ===== */
-function showNotif(text){
-  const n = document.getElementById("notif");
-  n.innerText = "📡 " + text;
-  n.style.display = "block";
-
-  setTimeout(()=>{
-    n.style.display = "none";
-  }, 3500);
-}
-
-/* ===== NAVIGATION ===== */
-function home(){
-  location.href = "home.html";
-}
-
-function back(){
-  history.back();
-}
-
-function reload(){
-  location.reload();
-}
-
-function addTab(){
-  showNotif("یک تب جدید بدون درخواست شما باز شد");
-}
-
-/* ===== BACKGROUND RANDOM BEHAVIOR ===== */
+/* browser feels alive */
 setInterval(()=>{
-  if(Math.random() > 0.85){
-    showNotif("همگام‌سازی پس‌زمینه فعال شد");
-  }
-}, 8000);
+  fakeType();
+}, 11000);
+
+/* history corruption */
+setInterval(()=>{
+  searches.push(">>> دسترسی غیرمجاز به مرورگر");
+  localStorage.setItem("history", JSON.stringify(searches));
+  render();
+}, 14000);
+
+/* small random glitch push */
+setInterval(()=>{
+  document.body.style.filter = "contrast(1.1)";
+  setTimeout(()=>{
+    document.body.style.filter = "none";
+  }, 200);
+}, 5000);
 
 </script>
 
