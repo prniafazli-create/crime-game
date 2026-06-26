@@ -109,14 +109,20 @@ body{
   <div id="appsWrapper">
     <div id="apps">
 
+      <!-- TOP APPS -->
+      <div class="app" onclick="openApp('phone.html')">
+        <div class="icon">📞</div>
+        Phone
+      </div>
+
       <div class="app" onclick="openApp('messages.html')">
         <div class="icon">💬</div>
         Messages
       </div>
 
-      <div class="app" onclick="openApp('phone.html')">
-        <div class="icon">📞</div>
-        Phone
+      <div class="app" onclick="openApp('camera.html')">
+        <div class="icon">📷</div>
+        Camera
       </div>
 
       <div class="app" onclick="openApp('gallery.html')">
@@ -159,22 +165,62 @@ body{
         Settings
       </div>
 
+      <div class="app" onclick="openApp('music.html')">
+        <div class="icon">🎵</div>
+        Music
+      </div>
+
+      <div class="app" onclick="openApp('instagram.html')">
+        <div class="icon">📸</div>
+        Instagram
+      </div>
+
+      <div class="app" onclick="fakeApp()">
+        <div class="icon">⬛</div>
+        Black Box
+      </div>
+
+      <div class="app" onclick="fakeApp()">
+        <div class="icon">◼</div>
+        Unknown
+      </div>
+
+      <div class="app" onclick="fakeApp()">
+        <div class="icon">?</div>
+        ????
+      </div>
+
+      <div class="app" onclick="fakeApp()">
+        <div class="icon">👁</div>
+        Hidden
+      </div>
+
     </div>
   </div>
 
-  <!-- DOCK -->
+  <!-- DOCK (UPDATED) -->
   <div id="dock">
-    <div class="dockIcon"></div>
-    <div class="dockIcon"></div>
-    <div class="dockIcon"></div>
+
+    <div class="dockIcon" onclick="openApp('camera.html')">📷</div>
+    <div class="dockIcon" onclick="openApp('messages.html')">💬</div>
+    <div class="dockIcon" onclick="openApp('phone.html')">📞</div>
+
   </div>
 
 </div>
 
 <script>
+
 function openApp(page){
   window.location.href = page;
 }
+
+/* fake scary apps */
+function fakeApp(){
+  document.body.style.animation = "shake 0.2s";
+  setTimeout(()=>document.body.style.animation="",200);
+}
+
 </script>
 
 </body>
