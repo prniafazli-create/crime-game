@@ -13,44 +13,6 @@ body{
   color:white;
 }
 
-/* TOP */
-.top{
-  position:sticky;
-  top:0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px;
-  background:rgba(20,20,30,0.85);
-  backdrop-filter: blur(12px);
-  border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-.profile{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.avatar{
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  object-fit:cover;
-}
-
-/* CALL BUTTONS */
-.callBox{
-  display:flex;
-  gap:10px;
-}
-
-.btn{
-  cursor:pointer;
-  opacity:0.8;
-  font-size:18px;
-}
-
 /* CHAT */
 #chat{
   padding:12px;
@@ -61,32 +23,29 @@ body{
   gap:10px;
 }
 
+/* MESSAGE */
 .msg{
   max-width:75%;
   padding:10px;
-  border-radius:14px;
-  animation:pop 0.2s ease;
+  border-radius:12px;
+  background:#3a0f1f;
 }
 
-@keyframes pop{
-  from{transform:scale(0.9);opacity:0;}
-  to{transform:scale(1);opacity:1;}
+/* ME */
+.me{
+  background:#1f1f2e;
+  align-self:flex-start;
 }
 
+/* OTHER */
 .other{
   background:#3a0f1f;
   align-self:flex-end;
 }
 
-.me{
-  background:rgba(255,255,255,0.08);
-  align-self:flex-start;
-}
-
-.time{
-  font-size:10px;
-  opacity:0.5;
-  margin-top:4px;
+/* VOICE */
+audio{
+  width:200px;
 }
 
 /* INPUT */
@@ -97,7 +56,7 @@ body{
   display:flex;
   gap:8px;
   padding:10px;
-  background:rgba(20,20,30,0.9);
+  background:#111;
 }
 
 input{
@@ -105,38 +64,24 @@ input{
   padding:10px;
   border-radius:20px;
   border:none;
-  outline:none;
-  background:#1e1e2a;
-  color:white;
 }
 
-.send{
-  width:40px;
-  height:40px;
+.send,.voice{
+  width:45px;
+  height:45px;
   border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   background:#ff4d4d;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   cursor:pointer;
 }
 
-.voice{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:#333;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-}
-
-/* CALL UI */
+/* CALL */
 .callScreen{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.9);
+  background:#000;
   display:none;
   flex-direction:column;
   justify-content:center;
@@ -148,190 +93,141 @@ input{
   width:120px;
   height:120px;
   border-radius:50%;
-  object-fit:cover;
-  animation:pulse 1.2s infinite;
+  background:#2b2b3a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  animation:pulse 1s infinite;
 }
 
 @keyframes pulse{
-  0%{transform:scale(1);}
   50%{transform:scale(1.05);}
-  100%{transform:scale(1);}
 }
 
-.callBtns{
-  margin-top:20px;
-  display:flex;
-  gap:20px;
-}
-
-.callBtn{
-  width:60px;
-  height:60px;
+.endBtn{
+  margin-top:30px;
+  width:70px;
+  height:70px;
   border-radius:50%;
+  background:red;
   display:flex;
-  justify-content:center;
   align-items:center;
-  font-size:20px;
+  justify-content:center;
+  font-size:30px;
   cursor:pointer;
 }
-
-.accept{background:green;}
-.decline{background:red;}
 </style>
 </head>
 
 <body>
 
-<audio id="ring" src="ring.mp3"></audio>
-
-<!-- CALL SCREEN -->
-<div class="callScreen" id="callScreen">
-  <img src="kaw.png" class="callAvatar">
-  <div style="margin-top:10px;font-size:18px;">جوجه سیرکی در حال تماس...</div>
-
-  <div class="callBtns">
-    <div class="callBtn accept" onclick="acceptCall()">✔</div>
-    <div class="callBtn decline" onclick="declineCall()">✖</div>
-  </div>
-</div>
-
-<!-- TOP -->
-<div class="top">
-
-  <div class="btn" onclick="location.href='home.html'">🏠</div>
-
-  <div class="profile">
-    <img src="kaw.png" class="avatar">
-    <div>جوجه سیرکی</div>
-  </div>
-
-  <div class="callBox">
-    <div class="btn" onclick="fakeCall()">📞</div>
-    <div class="btn" onclick="history.back()">←</div>
-  </div>
-</div>
+<audio id="ring" src="bogh.mp3"></audio>
 
 <!-- CHAT -->
 <div id="chat"></div>
 
 <!-- INPUT -->
 <div class="inputBox">
+
+  <!-- VOICE BUTTON -->
   <div class="voice"
-    onmousedown="startRec()" 
-    onmouseup="stopRec()">🎤</div>
+       onmousedown="startRec()" 
+       onmouseup="stopRec()"
+       ontouchstart="startRec()"
+       ontouchend="stopRec()">🎤</div>
 
   <input id="text" placeholder="پیام بنویس...">
   <div class="send" onclick="sendMsg()">➤</div>
+</div>
+
+<!-- CALL -->
+<div class="callScreen" id="callScreen">
+  <div class="callAvatar">📞</div>
+  <div>جوجه سیرکی در حال تماس...</div>
+  <div class="endBtn" onclick="endCall()">✖</div>
 </div>
 
 <script>
 
 const chat=document.getElementById("chat");
 const ring=document.getElementById("ring");
-const callScreen=document.getElementById("callScreen");
+
+let recorder;
+let chunks=[];
+let autoCut;
 
 /* messages */
-const messages=[
-  {type:"other", text:"هنوزم موقع عصبی شدن ناخن‌هاتو می‌جَوی؟", time:"14:01"},
-  {type:"me", text:"هنوزم موقع ترسیدن زیاد حرف می‌زنی؟", time:"14:02"},
-  {type:"other", text:"نه.", time:"14:03"},
-  {type:"other", text:"الان فقط می‌شمرم.", time:"14:03"},
-  {type:"me", text:"چی رو؟", time:"14:04"},
-  {type:"other", text:"کسایی که بعد از آشنایی با تو ناپدید شدن.", time:"14:05"}
-];
+function addMsg(type,content,voice=false){
+  const div=document.createElement("div");
+  div.className="msg "+type;
 
-function render(){
-  chat.innerHTML="";
-  messages.forEach(m=>{
-    const div=document.createElement("div");
-    div.className="msg "+m.type;
-    div.innerHTML=`${m.text}<div class="time">${m.time}</div>`;
-    chat.appendChild(div);
-  });
+  if(voice){
+    div.innerHTML=`🎧 ویس:<br><audio controls src="${content}"></audio>`;
+  }else{
+    div.innerHTML=content;
+  }
+
+  chat.appendChild(div);
   chat.scrollTop=chat.scrollHeight;
 }
 
-/* SEND */
+/* TEXT */
 function sendMsg(){
   const input=document.getElementById("text");
   if(!input.value.trim()) return;
 
-  const now=new Date();
-  const time=now.getHours()+":"+String(now.getMinutes()).padStart(2,"0");
-
-  messages.push({type:"me",text:input.value,time});
+  addMsg("me",input.value);
   input.value="";
-  render();
-}
-
-/* FAKE CALL */
-function fakeCall(){
-  callScreen.style.display="flex";
-  ring.currentTime=0;
-  ring.play();
-
-  if(navigator.vibrate){
-    navigator.vibrate([400,300,400,300]);
-  }
-
-  // auto cut if not answered
-  autoCut=setTimeout(()=>{
-    declineCall();
-  },4000);
-}
-
-let autoCut;
-
-/* ACCEPT */
-function acceptCall(){
-  ring.pause();
-  callScreen.style.display="none";
-  clearTimeout(autoCut);
-}
-
-/* DECLINE */
-function declineCall(){
-  ring.pause();
-  callScreen.style.display="none";
-  clearTimeout(autoCut);
 }
 
 /* VOICE REC */
-let rec, chunks=[];
-
 async function startRec(){
   const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-  rec=new MediaRecorder(stream);
+  recorder=new MediaRecorder(stream);
   chunks=[];
 
-  rec.ondataavailable=e=>chunks.push(e.data);
+  recorder.ondataavailable=e=>chunks.push(e.data);
 
-  rec.onstop=()=>{
+  recorder.onstop=()=>{
     const blob=new Blob(chunks,{type:"audio/webm"});
     const url=URL.createObjectURL(blob);
-
-    const now=new Date();
-    const time=now.getHours()+":"+String(now.getMinutes()).padStart(2,"0");
-
-    messages.push({
-      type:"me",
-      voice:url,
-      time
-    });
-
-    render();
+    addMsg("me",url,true);
   };
 
-  rec.start();
+  recorder.start();
 }
 
 function stopRec(){
-  if(rec && rec.state!=="inactive"){
-    rec.stop();
+  if(recorder && recorder.state!=="inactive"){
+    recorder.stop();
   }
 }
 
-render();
+/* CALL AUTO */
+setTimeout(()=>startCall(),2000);
+
+function startCall(){
+  document.getElementById("callScreen").style.display="flex";
+  ring.play();
+
+  if(navigator.vibrate){
+    navigator.vibrate([300,200,300,200,300]);
+  }
+
+  autoCut=setTimeout(endCall,8000);
+}
+
+function endCall(){
+  document.getElementById("callScreen").style.display="none";
+  ring.pause();
+  ring.currentTime=0;
+  clearTimeout(autoCut);
+}
+
+/* INIT */
+addMsg("other","هنوزم موقع عصبی شدن ناخن‌هاتو می‌جَوی؟");
+addMsg("me","هنوزم موقع ترسیدن زیاد حرف می‌زنی؟");
 
 </script>
 
