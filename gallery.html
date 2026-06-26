@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Gallery</title>
+
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#000;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* STATUS */
+#statusBar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:28px;
+  background:rgba(20,20,20,0.9);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 10px;
+  font-size:12px;
+  z-index:10;
+}
+
+/* GRID */
+#gallery{
+  position:absolute;
+  top:30px;
+  bottom:60px;
+  left:0;
+  right:0;
+  overflow-y:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:3px;
+  padding:3px;
+}
+
+.item{
+  position:relative;
+  aspect-ratio:1/1;
+}
+
+.item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:0.2s;
+}
+
+.selected::after{
+  content:"✔";
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:#00ff88;
+  color:#000;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+}
+
+/* NAV */
+#nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:55px;
+  background:rgba(20,20,20,0.95);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  font-size:22px;
+  z-index:10;
+}
+
+/* VIEWER */
+#viewer{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:none;
+  z-index:20;
+  touch-action:none;
+}
+
+#viewer img{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  max-width:100%;
+  max-height:100%;
+  transition:0.1s;
+}
+
+/* TOP BAR */
+#topTools{
+  position:absolute;
+  top:35px;
+  left:10px;
+  right:10px;
+  display:flex;
+  justify-content:space-between;
+  font-size:22px;
+}
+
+/* BOTTOM TOOL */
+#bottomTools{
+  position:absolute;
+  bottom:40px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  font-size:26px;
+}
+
+.tool{
+  background:rgba(255,255,255,0.1);
+  padding:10px;
+  border-radius:50%;
+}
+</style>
+</head>
+
+<body>
+
+<div id="statusBar">
+  <div>15:32</div>
+  <div>📶 🔋</div>
+</div>
+
+<div id="gallery"></div>
+
+<!-- VIEWER -->
+<div id="viewer">
+  <div id="topTools">
+    <div onclick="closeViewer()">⬅</div>
+    <div onclick="deleteCurrent()">🗑</div>
+  </div>
+
+  <img id="img">
+
+  <div id="bottomTools">
+    <div class="tool" onclick="zoomOut()">➖</div>
+    <div class="tool" onclick="resetZoom()">🔄</div>
+    <div class="tool" onclick="zoomIn()">➕</div>
+  </div>
+</div>
+
+<div id="nav">
+  <div>⬅</div>
+  <div>🏠</div>
+  <div>⚪</div>
+</div>
+
+<script>
+let images = [
+"samo.png","reds.png","karen.png","waz.png","chali.png",
+"kali.png","alex.png","eric.png","babo.png","silv.png",
+"tari.png","jaki.png","come.png","eli.png","alma.png",
+"alma.png","mae.png","lili.png","mosi.png","telma.png",
+"samo.png"
+];
+
+let currentIndex = 0;
+let scale = 1;
+let startDist = 0;
+let startScale = 1;
+
+const gallery = document.getElementById("gallery");
+const viewer = document.getElementById("viewer");
+const img = document.getElementById("img");
+
+/* ===== BUILD GRID ===== */
+function render(){
+  gallery.innerHTML = "";
+  images.forEach((src,i)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+
+    const im = document.createElement("img");
+    im.src = src;
+
+    let pressTimer;
+
+    im.onclick = ()=>{
+      openViewer(i);
+    }
+
+    // long press select
+    im.onmousedown = ()=>{
+      pressTimer = setTimeout(()=>{
+        div.classList.toggle("selected");
+      },600);
+    }
+    im.onmouseup = ()=> clearTimeout(pressTimer);
+
+    div.appendChild(im);
+    gallery.appendChild(div);
+  });
+}
+
+render();
+
+/* ===== VIEWER ===== */
+function openViewer(i){
+  currentIndex = i;
+  viewer.style.display = "block";
+  img.src = images[i];
+  scale = 1;
+  updateTransform();
+}
+
+function closeViewer(){
+  viewer.style.display = "none";
+}
+
+/* ===== DELETE ===== */
+function deleteCurrent(){
+  images.splice(currentIndex,1);
+  closeViewer();
+  render();
+}
+
+/* ===== ZOOM CONTROLS ===== */
+function updateTransform(x=0,y=0){
+  img.style.transform = `translate(-50%,-50%) translate(${x}px,${y}px) scale(${scale})`;
+}
+
+function zoomIn(){
+  scale += 0.2;
+  updateTransform();
+}
+
+function zoomOut(){
+  scale = Math.max(1,scale-0.2);
+  updateTransform();
+}
+
+function resetZoom(){
+  scale = 1;
+  updateTransform();
+}
+
+/* ===== PINCH ZOOM ===== */
+viewer.addEventListener("touchstart",(e)=>{
+  if(e.touches.length==2){
+    startDist = getDist(e.touches);
+    startScale = scale;
+  }
+});
+
+viewer.addEventListener("touchmove",(e)=>{
+  if(e.touches.length==2){
+    e.preventDefault();
+    let dist = getDist(e.touches);
+    scale = startScale * (dist/startDist);
+    scale = Math.max(1,Math.min(scale,4));
+    updateTransform();
+  }
+},{passive:false});
+
+function getDist(t){
+  let dx = t[0].clientX - t[1].clientX;
+  let dy = t[0].clientY - t[1].clientY;
+  return Math.sqrt(dx*dx+dy*dy);
+}
+
+/* ===== DOUBLE TAP ZOOM ===== */
+let lastTap = 0;
+viewer.addEventListener("touchend",(e)=>{
+  let now = Date.now();
+  if(now - lastTap < 300){
+    scale = scale > 1 ? 1 : 2.5;
+    updateTransform();
+  }
+  lastTap = now;
+});
+</script>
+
+</body>
+</html>
