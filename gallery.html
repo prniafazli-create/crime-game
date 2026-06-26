@@ -293,6 +293,201 @@ viewer.addEventListener("touchend",(e)=>{
   lastTap = now;
 });
 </script>
+  <script>
+/* =========================
+   iOS PRO LAYER (ADD-ON)
+   بدون تغییر در کد اصلی
+========================= */
+
+let favorites = new Set();
+let trash = [];
+let currentAlbum = "all";
+
+const nav = document.getElementById("nav");
+const navBtns = nav.querySelectorAll("div");
+const homeBtn = navBtns[1];
+const backBtn = navBtns[0];
+
+homeBtn.onclick = ()=> {
+  window.location.href = "home.html";
+};
+
+backBtn.onclick = ()=> {
+  closeViewer();
+};
+
+/* ===== FAVORITE (double tap heart toggle) ===== */
+function toggleFav(src){
+  if(favorites.has(src)){
+    favorites.delete(src);
+  }else{
+    favorites.add(src);
+  }
+}
+
+/* ===== OVERRIDE DELETE (move to trash) ===== */
+const oldDelete = deleteCurrent;
+deleteCurrent = function(){
+  trash.push(images[currentIndex]);
+  images.splice(currentIndex,1);
+  closeViewer();
+  render();
+};
+
+/* ===== RESTORE LAST TRASH (long press nav right button) ===== */
+navBtns[2].onlongpress = null;
+navBtns[2].addEventListener("click", ()=>{});
+
+navBtns[2].addEventListener("contextmenu",(e)=>{
+  e.preventDefault();
+  if(trash.length>0){
+    images.push(trash.pop());
+    render();
+  }
+});
+
+/* ===== PEOPLE ALBUM (auto group by name) ===== */
+function getPeopleAlbums(){
+  let albums = {};
+  images.forEach(img=>{
+    let name = img.split(".")[0];
+    if(!albums[name]) albums[name]=[];
+    albums[name].push(img);
+  });
+  return albums;
+}
+
+/* ===== SEARCH ===== */
+let searchBar = document.createElement("input");
+searchBar.placeholder = "Search photos...";
+searchBar.style.position="absolute";
+searchBar.style.top="28px";
+searchBar.style.left="10px";
+searchBar.style.right="10px";
+searchBar.style.zIndex="15";
+searchBar.style.padding="6px";
+searchBar.style.borderRadius="8px";
+searchBar.style.border="none";
+searchBar.style.display="none";
+
+document.body.appendChild(searchBar);
+
+let searchMode = false;
+
+function toggleSearch(){
+  searchMode = !searchMode;
+  searchBar.style.display = searchMode ? "block" : "none";
+  render();
+}
+
+searchBar.oninput = ()=>{
+  render(searchBar.value);
+};
+
+/* ===== ENHANCED RENDER (NO EDIT ORIGINAL) ===== */
+const originalRender = render;
+
+render = function(filter=""){
+  gallery.innerHTML = "";
+
+  let data = images.filter(i=>i.includes(filter));
+
+  data.forEach((src,i)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+
+    const im = document.createElement("img");
+    im.src = src;
+
+    let pressTimer;
+
+    im.onclick = ()=>{
+      openViewer(images.indexOf(src));
+    };
+
+    im.onmousedown = ()=>{
+      pressTimer = setTimeout(()=>{
+        div.classList.toggle("selected");
+        toggleFav(src);
+      },600);
+    };
+    im.onmouseup = ()=> clearTimeout(pressTimer);
+
+    div.appendChild(im);
+    gallery.appendChild(div);
+  });
+};
+
+/* ===== SWIPE NAVIGATION (iOS style) ===== */
+let startX = 0;
+
+viewer.addEventListener("touchstart",(e)=>{
+  if(e.touches.length===1){
+    startX = e.touches[0].clientX;
+  }
+});
+
+viewer.addEventListener("touchend",(e)=>{
+  if(!startX) return;
+
+  let endX = e.changedTouches[0].clientX;
+  let diff = endX - startX;
+
+  if(Math.abs(diff) > 50){
+    if(diff < 0){
+      nextImage();
+    }else{
+      prevImage();
+    }
+  }
+
+  startX = 0;
+});
+
+function nextImage(){
+  if(currentIndex < images.length-1){
+    currentIndex++;
+    openViewer(currentIndex);
+  }
+}
+
+function prevImage(){
+  if(currentIndex > 0){
+    currentIndex--;
+    openViewer(currentIndex);
+  }
+}
+
+/* ===== IOS STYLE ANIMATION ===== */
+viewer.style.transition = "0.25s ease";
+
+/* ===== ENHANCED OPEN VIEWER ===== */
+const oldOpen = openViewer;
+openViewer = function(i){
+  currentIndex = i;
+  viewer.style.display = "block";
+  viewer.style.opacity = "0";
+  setTimeout(()=>{
+    viewer.style.opacity = "1";
+  },10);
+
+  img.src = images[i];
+  scale = 1;
+  updateTransform();
+};
+
+/* ===== DOUBLE TAP HEART ===== */
+viewer.addEventListener("dblclick",()=>{
+  let src = images[currentIndex];
+  toggleFav(src);
+});
+
+/* ===== PEOPLE BUTTON (optional hook) ===== */
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="f") toggleSearch();
+});
+
+</script>
 
 </body>
 </html>
