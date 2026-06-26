@@ -13,17 +13,16 @@ body{
   color:white;
 }
 
-/* TOP BAR */
+/* TOP */
 .top{
   position:sticky;
   top:0;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   padding:10px;
   background:rgba(20,20,30,0.85);
-  backdrop-filter: blur(12px);
-  border-bottom:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);
 }
 
 .profile{
@@ -36,112 +35,89 @@ body{
   width:35px;
   height:35px;
   border-radius:50%;
-  background:#2b2b3a; /* دایره بدون عکس */
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-}
-
-/* CALL BUTTONS */
-.callBox{
-  display:flex;
-  gap:10px;
-}
-
-.btn{
-  cursor:pointer;
-  font-size:18px;
-  opacity:0.8;
+  background:#2b2b3a;
 }
 
 /* CHAT */
 #chat{
   padding:12px;
-  height:calc(100vh - 140px);
+  height:calc(100vh - 120px);
   overflow-y:auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
 }
 
 .msg{
   max-width:75%;
   padding:10px;
+  margin:8px 0;
   border-radius:12px;
-  font-size:14px;
 }
 
 .me{background:#1f1f2e; align-self:flex-start;}
 .other{background:#3a0f1f; align-self:flex-end;}
 
-/* INPUT */
-.inputBox{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  display:flex;
-  gap:8px;
-  padding:10px;
-  background:#111;
-}
-
-input{
-  flex:1;
-  padding:10px;
-  border-radius:20px;
-  border:none;
-  outline:none;
-}
-
-.send,.voice{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#ff4d4d;
-  cursor:pointer;
-}
-
 /* CALL SCREEN */
 .callScreen{
   position:fixed;
   inset:0;
-  background:#000;
+  background:linear-gradient(#000,#111);
   display:none;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   z-index:9999;
+  text-align:center;
 }
 
 .callAvatar{
   width:120px;
   height:120px;
   border-radius:50%;
-  background:#2b2b3a;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:40px;
+  overflow:hidden;
   animation:pulse 1s infinite;
+  border:2px solid #444;
+}
+
+.callAvatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 @keyframes pulse{
   50%{transform:scale(1.05);}
 }
 
+.callText{
+  margin-top:15px;
+  font-size:18px;
+  opacity:0.9;
+}
+
+.actions{
+  margin-top:25px;
+  display:flex;
+  gap:20px;
+}
+
+.btn{
+  padding:12px 18px;
+  border-radius:30px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.answer{background:#2ecc71;}
+.decline{background:#e74c3c;}
+
 .endBtn{
-  margin-top:30px;
+  margin-top:25px;
   width:70px;
   height:70px;
   border-radius:50%;
   background:red;
-  display:flex;
-  align-items:center;
+  display:none;
   justify-content:center;
+  align-items:center;
   font-size:30px;
   cursor:pointer;
 }
@@ -150,115 +126,105 @@ input{
 
 <body>
 
-<audio id="ring" src="ring.mp3"></audio>
-<audio id="bogh" src="bogh.mp3"></audio>
+<audio id="ring" src="ring.mp3" loop></audio>
 
 <!-- TOP -->
 <div class="top">
-
   <div class="profile">
-    <div class="avatar">🐥</div>
-    <div>جوجه سیرکی</div>
+    <div class="avatar"></div>
+    <div>شوخی بی‌مزه</div>
   </div>
-
-  <div class="callBox">
-    <div class="btn" onclick="startCall()">📞</div>
-    <div class="btn">🎥</div>
-  </div>
-
 </div>
 
 <!-- CHAT -->
 <div id="chat"></div>
 
-<!-- INPUT -->
-<div class="inputBox">
-  <div class="voice">🎤</div>
-  <input id="text" placeholder="پیام بنویس...">
-  <div class="send" onclick="sendMsg()">➤</div>
-</div>
-
-<!-- CALL SCREEN -->
+<!-- CALL -->
 <div class="callScreen" id="callScreen">
 
-  <div class="callAvatar">📞</div>
-  <div>در حال تماس با جوجه سیرکی...</div>
+  <div class="callAvatar">
+    <img src="dar.png">
+  </div>
 
-  <div class="endBtn" onclick="endCall()">✖</div>
+  <div class="callText">
+    تماس ورودی از رز سفید
+  </div>
+
+  <div class="actions" id="actions">
+    <div class="btn answer" onclick="answerCall()">Answer</div>
+    <div class="btn decline" onclick="declineCall()">Decline</div>
+  </div>
+
+  <div class="endBtn" id="endBtn" onclick="endCall()">✖</div>
+
 </div>
 
 <script>
 
 const chat=document.getElementById("chat");
 const ring=document.getElementById("ring");
-const bogh=document.getElementById("bogh");
 
-let autoCut;
+let timeoutCall;
 
-/* CHAT MESSAGES */
-function add(type,text){
-  const div=document.createElement("div");
-  div.className="msg "+type;
-  div.innerText=text;
-  chat.appendChild(div);
-  chat.scrollTop=chat.scrollHeight;
+/* NEW CHAT */
+const messages=[
+{type:"other",text:"هنوزم موقع عصبی شدن ناخن‌هاتو می‌جَوی؟"},
+{type:"me",text:"هنوزم موقع ترسیدن زیاد حرف می‌زنی؟"},
+{type:"other",text:"نه."},
+{type:"other",text:"الان فقط می‌شمرم."},
+{type:"me",text:"چی رو؟"},
+{type:"other",text:"کسایی که بعد از آشنایی با تو ناپدید شدن."}
+];
+
+function render(){
+  chat.innerHTML="";
+  messages.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg "+m.type;
+    div.innerText=m.text;
+    chat.appendChild(div);
+  });
 }
 
-/* INITIAL CHAT */
-add("other","داداش... میشه امشب تنها نمونه؟");
-add("me","از چی می‌ترسی؟");
-add("other","از تو نه...");
-
-/* SEND */
-function sendMsg(){
-  const input=document.getElementById("text");
-  if(!input.value.trim()) return;
-
-  add("me",input.value);
-  input.value="";
-}
-
-/* VOICE (fake simple) */
-const voiceBtn=document.querySelector(".voice");
-voiceBtn.onclick=()=>{
-  add("me","🎤 پیام صوتی ارسال شد (دمو)");
-}
+render();
 
 /* CALL */
-function startCall(){
+setTimeout(()=>incomingCall(),2000);
 
+function incomingCall(){
   document.getElementById("callScreen").style.display="flex";
 
-  // ring sound
-  ring.currentTime=0;
   ring.play();
 
-  // vibration
   if(navigator.vibrate){
-    navigator.vibrate([400,300,400]);
+    navigator.vibrate([400,200,400]);
   }
 
-  // auto stop after 8 sec
-  autoCut=setTimeout(endCall,8000);
+  timeoutCall=setTimeout(()=>{
+    endCall();
+  },6000); // زودتر قطع میشه
 }
 
-/* END CALL */
-function endCall(){
-
-  document.getElementById("callScreen").style.display="none";
-
+/* ANSWER */
+function answerCall(){
   ring.pause();
-  bogh.pause();
-  ring.currentTime=0;
-  bogh.currentTime=0;
+  document.getElementById("callText").innerText="در حال مکالمه...";
 
-  clearTimeout(autoCut);
+  document.getElementById("actions").style.display="none";
+  document.getElementById("endBtn").style.display="flex";
 }
 
-/* AUTO CALL AFTER 2 SEC */
-setTimeout(()=>{
-  startCall();
-},2000);
+/* DECLINE */
+function declineCall(){
+  endCall();
+}
+
+/* END */
+function endCall(){
+  document.getElementById("callScreen").style.display="none";
+  ring.pause();
+  clearTimeout(timeoutCall);
+}
 
 </script>
 
