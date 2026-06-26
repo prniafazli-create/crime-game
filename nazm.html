@@ -1,0 +1,292 @@
+مکس
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chat</title>
+
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#0b0b0f;
+  color:white;
+}
+
+/* TOP */
+.top{
+  position:sticky;
+  top:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  background:rgba(20,20,30,0.85);
+  backdrop-filter:blur(12px);
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.callBox{
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  cursor:pointer;
+  opacity:0.8;
+}
+
+/* CHAT */
+#chat{
+  padding:12px;
+  height:calc(100vh - 140px);
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.msg{
+  max-width:75%;
+  padding:10px;
+  border-radius:12px;
+}
+
+.me{background:#1e1e2a; align-self:flex-start;}
+.other{background:#3a0f1f; align-self:flex-end;}
+
+.time{
+  font-size:10px;
+  opacity:0.6;
+  margin-top:4px;
+}
+
+/* INPUT */
+.inputBox{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  gap:8px;
+  padding:10px;
+  background:rgba(20,20,30,0.9);
+}
+
+input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:none;
+  background:#1e1e2a;
+  color:white;
+}
+
+.send,.voice{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#333;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+}
+
+/* CALL SCREEN */
+.callScreen{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.callAvatar{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  overflow:hidden;
+  border:2px solid #444;
+}
+
+.callAvatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.callText{
+  margin-top:15px;
+  font-size:18px;
+}
+
+.endBtn{
+  margin-top:20px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:red;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="ring" src="bogh.mp3"></audio>
+
+<!-- TOP -->
+<div class="top">
+  <div class="btn" onclick="location.href='home.html'">🏠</div>
+
+  <div class="profile">
+    <img src="kaw.png" class="avatar">
+    <div>مسئول نظم</div>
+  </div>
+
+  <div class="callBox">
+    <div class="btn" onclick="startCall()">📞</div>
+    <div class="btn" onclick="fakeVideo()">🎥</div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat"></div>
+
+<!-- INPUT -->
+<div class="inputBox">
+  <div class="voice" onmousedown="startRec()" onmouseup="stopRec()">🎤</div>
+  <input id="text" placeholder="پیام بنویس...">
+  <div class="send" onclick="sendMsg()">➤</div>
+</div>
+
+<!-- CALL -->
+<div class="callScreen" id="callScreen">
+  <div class="callAvatar">
+    <img src="kaw.png">
+  </div>
+  <div class="callText">در حال تماس با مسئول نظم...</div>
+  <div class="endBtn" onclick="endCall()">✖</div>
+</div>
+
+<script>
+
+const chat=document.getElementById("chat");
+const ring=document.getElementById("ring");
+
+const messages=[
+  {type:"other", text:"جلسه فردا ساعت ۹.", time:"09:00"},
+  {type:"other", text:"لطفاً این بار مست نباش.", time:"09:01"},
+  {type:"me", text:"قول نمی‌دم.", time:"09:02"}
+];
+
+function render(){
+  chat.innerHTML="";
+  messages.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg "+m.type;
+    div.innerHTML=`${m.text}<div class="time">${m.time||""}</div>`;
+    chat.appendChild(div);
+  });
+  chat.scrollTop=chat.scrollHeight;
+}
+
+/* SEND */
+function sendMsg(){
+  const input=document.getElementById("text");
+  if(!input.value.trim()) return;
+
+  const now=new Date();
+  const time=now.getHours()+":"+String(now.getMinutes()).padStart(2,"0");
+
+  messages.push({type:"me", text:input.value, time});
+  input.value="";
+  render();
+}
+
+/* CALL */
+let callTimer;
+
+function startCall(){
+  document.getElementById("callScreen").style.display="flex";
+
+  ring.currentTime=0;
+  ring.play();
+
+  callTimer=setTimeout(()=>{
+    endCall();
+  },8000);
+}
+
+function endCall(){
+  document.getElementById("callScreen").style.display="none";
+  ring.pause();
+  ring.currentTime=0;
+  clearTimeout(callTimer);
+}
+
+function fakeVideo(){
+  alert("🎥 تماس تصویری (فیک)");
+}
+
+/* VOICE REC */
+let recorder;
+let chunks=[];
+
+async function startRec(){
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  recorder=new MediaRecorder(stream);
+  chunks=[];
+
+  recorder.ondataavailable=e=>chunks.push(e.data);
+
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:"audio/webm"});
+    const url=URL.createObjectURL(blob);
+
+    const now=new Date();
+    const time=now.getHours()+":"+String(now.getMinutes()).padStart(2,"0");
+
+    messages.push({
+      type:"me",
+      voice:url,
+      time
+    });
+
+    render();
+  };
+
+  recorder.start();
+}
+
+function stopRec(){
+  if(recorder && recorder.state!=="inactive"){
+    recorder.stop();
+  }
+}
+
+render();
+
+</script>
+
+</body>
+</html>
