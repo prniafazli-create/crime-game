@@ -44,7 +44,7 @@ video{
   100%{transform:translate(0,0)}
 }
 
-/* FLASH (blink effect) */
+/* FLASH */
 .flash{
   position:fixed;
   inset:0;
@@ -53,30 +53,29 @@ video{
   pointer-events:none;
 }
 
-/* CLOWN behind user (REAL HORROR FIX) */
+/* 👻 CLOWN (behind user FIXED) */
 #clown{
   position:fixed;
   inset:0;
   background:url("https://i.imgur.com/8QfQX9Q.png") center/cover no-repeat;
   opacity:0;
   pointer-events:none;
-  filter:brightness(0.4) contrast(1.3) blur(0.5px);
   mix-blend-mode:screen;
-  transform:scale(1.05);
+  filter:brightness(0.4) contrast(1.4) blur(0.6px);
 }
 
-/* ghost overlay behind user */
+/* shadow ghost */
 #ghost{
   position:fixed;
   inset:0;
   background:url("https://i.imgur.com/8QfQX9Q.png") center/cover no-repeat;
   opacity:0;
-  mix-blend-mode:screen;
   pointer-events:none;
-  filter:blur(1px);
+  filter:blur(2px);
+  mix-blend-mode:screen;
 }
 
-/* black message screen */
+/* black message */
 #black{
   position:fixed;
   inset:0;
@@ -103,9 +102,9 @@ video{
 <div id="flash"></div>
 <div id="black"></div>
 
-<!-- REALISTIC CREEPY LAUGH -->
+<!-- 😈 REAL HORROR LAUGH -->
 <audio id="laugh" loop>
-  <source src="https://www.soundjay.com/human/sounds/laugh-1.mp3" type="audio/mp3">
+  <source src="https://www.soundjay.com/human/sounds/laugh-1.mp3">
 </audio>
 
 <script>
@@ -122,64 +121,62 @@ const laugh = document.getElementById("laugh");
 navigator.mediaDevices.getUserMedia({ video:true })
 .then(stream=>{
   video.srcObject = stream;
-})
-.catch(()=>{
-  alert("Camera access denied");
 });
 
-// ghost slowly appears
+// ghost appears behind user
 setTimeout(()=>{
-  ghost.style.opacity = "0.12";
+  ghost.style.opacity = "0.2";
 }, 2000);
 
-// sequence start
+// MAIN SEQUENCE
 setTimeout(()=>{
 
-  // VHS ON (stronger)
-  vhs.style.opacity = "0.9";
+  // VHS ON (IMPORTANT FIX)
+  vhs.style.opacity = "0.85";
 
   // SHAKE ON
   document.body.classList.add("shake");
 
-  // FLASH BLINK
-  let blinkCount = 0;
-  const blink = setInterval(()=>{
+  // FLASH EFFECT
+  let i = 0;
+  const flashInt = setInterval(()=>{
     flash.style.opacity = "1";
-    setTimeout(()=> flash.style.opacity="0", 60);
-    blinkCount++;
-    if(blinkCount > 10) clearInterval(blink);
-  }, 200);
+    setTimeout(()=>flash.style.opacity="0", 70);
+    i++;
+    if(i > 8) clearInterval(flashInt);
+  }, 220);
 
-  // 👻 CLOWN APPEARS BEHIND USER (MAIN FIX)
+  // 👻 REAL CLOWN APPEARS BEHIND USER (FIXED CORE REQUEST)
   setTimeout(()=>{
     clown.style.opacity = "0.35";
   }, 1200);
 
-  // SOUND LAUGH (REAL HORROR LOOP)
+  // 😈 LAUGH SOUND (REAL HORROR)
   laugh.volume = 1;
   laugh.play().catch(()=>{});
 
-  // FINAL HORROR DROP
+  // FINAL HORROR MOMENT
   setTimeout(()=>{
 
     document.body.classList.remove("shake");
-    vhs.style.opacity = "0";
+    vhs.style.opacity = "0.15";
 
-    clown.style.opacity = "0.6";
-    ghost.style.opacity = "0.25";
+    clown.style.opacity = "0.65";
+    ghost.style.opacity = "0.35";
 
-    // BLACK SCREEN MESSAGE
+    // stronger presence
+    laugh.volume = 0.4;
+
     black.style.opacity = "1";
-    black.innerHTML = "او متوجه شد که به پرونده نگاه کردی.";
-
-    // laugh continues faintly
-    laugh.volume = 0.2;
+    black.innerHTML = "او فقط پشت تو نبود... الان هم هست.";
 
     setTimeout(()=>{
+
       black.style.opacity = "0";
       clown.style.opacity = "0";
       ghost.style.opacity = "0";
       laugh.pause();
+
     }, 3500);
 
   }, 3500);
