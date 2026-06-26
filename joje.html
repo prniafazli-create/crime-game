@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>joje chat</title>
+
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#0b0b0f;
+  color:white;
+}
+
+/* TOP BAR */
+.top{
+  position:sticky;
+  top:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px;
+  background:rgba(20,20,30,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.callBox{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.btn{
+  cursor:pointer;
+  opacity:0.8;
+  font-size:18px;
+}
+
+#chat{
+  padding:12px;
+  height:calc(100vh - 140px);
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* MESSAGES */
+.msg{
+  max-width:75%;
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:14px;
+  animation:pop 0.2s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(0.9); opacity:0;}
+  to{transform:scale(1); opacity:1;}
+}
+
+.other{
+  background:#3a0f1f;
+  align-self:flex-end;
+}
+
+.me{
+  background:rgba(255,255,255,0.08);
+  align-self:flex-start;
+}
+
+/* TIME */
+.time{
+  font-size:10px;
+  opacity:0.5;
+  margin-top:4px;
+}
+
+/* SYSTEM MESSAGE */
+.system{
+  font-size:11px;
+  opacity:0.5;
+  text-align:center;
+}
+
+/* INPUT */
+.inputBox{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  gap:8px;
+  padding:10px;
+  background:rgba(20,20,30,0.9);
+}
+
+input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:none;
+  outline:none;
+  background:#1e1e2a;
+  color:white;
+}
+
+.send{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#ff4d4d;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+}
+
+.voice{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#333;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="ring" src="ring.mp3" preload="auto"></audio>
+
+<!-- TOP -->
+<div class="top">
+  <div class="btn" onclick="location.href='home.html'">🏠</div>
+
+  <div class="profile">
+    <img src="kaw.png" class="avatar">
+    <div>شوخی بی‌مزه</div>
+  </div>
+
+  <div class="callBox">
+    <div class="btn" onclick="fakeCall()">📞</div>
+    <div class="btn" onclick="history.back()">←</div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat"></div>
+
+<!-- INPUT -->
+<div class="inputBox">
+  <div class="voice">🎤</div>
+  <input id="text" placeholder="پیام بنویس...">
+  <div class="send" onclick="sendMsg()">➤</div>
+</div>
+
+<script>
+
+const chat=document.getElementById("chat");
+const ring=document.getElementById("ring");
+
+/* messages */
+const messages=[
+  {type:"other", text:"هنوزم موقع عصبی شدن ناخن‌هاتو می‌جَوی؟", time:"14:01"},
+  {type:"me", text:"هنوزم موقع ترسیدن زیاد حرف می‌زنی؟", time:"14:02"},
+  {type:"other", text:"نه.", time:"14:03"},
+  {type:"other", text:"الان فقط می‌شمرم.", time:"14:03"},
+  {type:"me", text:"چی رو؟", time:"14:04"},
+  {type:"other", text:"کسایی که بعد از آشنایی با تو ناپدید شدن.", time:"14:05"},
+  {type:"system", text:"من پیام از طرف خود سیستمه", time:""}
+];
+
+function render(){
+  chat.innerHTML="";
+  messages.forEach(m=>{
+    const div=document.createElement("div");
+
+    if(m.type==="system"){
+      div.className="system";
+      div.innerHTML=`${m.text}`;
+    }else{
+      div.className="msg "+m.type;
+      div.innerHTML=`
+        ${m.text}
+        <div class="time">${m.time}</div>
+      `;
+    }
+
+    chat.appendChild(div);
+  });
+
+  chat.scrollTop=chat.scrollHeight;
+}
+
+/* SEND */
+function sendMsg(){
+  const input=document.getElementById("text");
+  if(!input.value.trim()) return;
+
+  const now=new Date();
+  const time=now.getHours()+":"+String(now.getMinutes()).padStart(2,"0");
+
+  messages.push({
+    type:"me",
+    text:input.value,
+    time:time
+  });
+
+  input.value="";
+  render();
+}
+
+/* FAKE CALL (3-4 sec) */
+function fakeCall(){
+
+  const caller=document.createElement("div");
+  caller.style.position="fixed";
+  caller.style.inset="0";
+  caller.style.background="rgba(0,0,0,0.85)";
+  caller.style.display="flex";
+  caller.style.flexDirection="column";
+  caller.style.justifyContent="center";
+  caller.style.alignItems="center";
+  caller.style.zIndex="9999";
+  caller.innerHTML=`
+    <img src="dar.jpg" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+    <div style="margin-top:10px;font-size:18px;">گل سفید در حال تماس...</div>
+  `;
+
+  document.body.appendChild(caller);
+
+  /* SOUND + VIBRATION */
+  ring.currentTime=0;
+  ring.play();
+
+  if(navigator.vibrate){
+    navigator.vibrate([400,300,400,300,400]);
+  }
+
+  /* END CALL AFTER 3-4 sec */
+  setTimeout(()=>{
+    ring.pause();
+    caller.remove();
+  },3500);
+}
+
+/* init */
+render();
+
+</script>
+
+</body>
+</html>
