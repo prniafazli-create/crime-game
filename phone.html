@@ -4,6 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -17,95 +18,83 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 <div class="phone">
 
-<div class="wallpaper"></div>
+    <!-- تصویر زمینه -->
+    <img src="oh.png" class="wallpaper">
 
-<div class="screen-dark"></div>
+    <!-- لایه تیره -->
+    <div class="dark-layer"></div>
 
-<div class="status-bar">
+    <!-- نوار وضعیت -->
+    <div class="status-bar">
 
-<div class="status-left">
+        <div class="status-left">
 
-<span id="clock">03:48</span>
+            <span id="clock">22:15</span>
 
-</div>
+        </div>
 
-<div class="status-right">
+        <div class="status-right">
 
-<span id="network">4G</span>
+            <span>📶</span>
 
-<span id="signal">📶</span>
+            <span>📡</span>
 
-<span id="wifi">📡</span>
+            <span>🔋100%</span>
 
-<span id="batteryText">75%</span>
+        </div>
 
-<span id="battery">🔋</span>
+    </div>
 
-</div>
+    <!-- تاریخ -->
+    <div class="date-box">
 
-</div>
+        <div id="date">
+            چهارشنبه، ۱۱ مهر
+        </div>
 
-<div class="lock-area">
+    </div>
 
-<div class="lock-icon">
-🔒
-</div>
+    <!-- الگوی ستاره -->
+    <div class="pattern-area">
 
-<div id="bigClock" class="big-clock">
-03:48
-</div>
+        <svg id="patternLines"></svg>
 
-<div id="date" class="date">
-چهارشنبه، ۲۵ تیر
-</div>
+        <div class="pattern-grid">
 
-</div>
+            <div class="dot" data-id="1"></div>
 
-<div class="notification">
+            <div class="dot" data-id="2"></div>
 
-<div class="notification-title">
-⚠ اعلان جدید
-</div>
+            <div class="dot" data-id="3"></div>
 
-<div class="notification-text">
-یک پیام خوانده‌نشده وجود دارد...
-</div>
+            <div class="dot" data-id="4"></div>
 
-</div>
+            <div class="dot center" data-id="5"></div>
 
-<div class="pattern-text">
+            <div class="dot" data-id="6"></div>
 
-برای باز کردن قفل
+            <div class="dot" data-id="7"></div>
 
-<br>
+            <div class="dot" data-id="8"></div>
 
-الگوی ستاره را رسم کنید
+            <div class="dot" data-id="9"></div>
 
-</div>
+            <div class="dot" data-id="10"></div>
 
-<div class="pattern-container">
+        </div>
 
-<div class="dot" data-id="1"></div>
-<div class="dot" data-id="2"></div>
-<div class="dot" data-id="3"></div>
+    </div>
 
-<div class="dot" data-id="4"></div>
-<div class="dot" data-id="5"></div>
-<div class="dot" data-id="6"></div>
+    <!-- هشدار -->
+    <div id="message" class="message"></div>
 
-<div class="dot" data-id="7"></div>
-<div class="dot" data-id="8"></div>
-<div class="dot" data-id="9"></div>
-
-<canvas id="patternCanvas"></canvas>
-
-</div>
-
-<div class="home-bar"></div>
+    <!-- انیمیشن باز شدن -->
+    <div id="unlockFlash"></div>
 
 </div>
 
 <script src="phone.js"></script>
 
 </body>
+
 </html>
