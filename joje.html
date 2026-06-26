@@ -41,7 +41,7 @@ body{
 /* CHAT */
 #chat{
   padding:12px;
-  height:calc(100vh - 120px);
+  height:calc(100vh - 180px);
   overflow-y:auto;
   display:flex;
   flex-direction:column;
@@ -56,21 +56,45 @@ body{
   line-height:1.4;
 }
 
-.me{
-  background:#1f1f2e;
-  align-self:flex-start;
+.me{background:#1f1f2e; align-self:flex-start;}
+.other{background:#3a0f1f; align-self:flex-end;}
+
+/* INPUT */
+.inputBox{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  gap:8px;
+  padding:10px;
+  background:rgba(20,20,30,0.9);
 }
 
-.other{
-  background:#3a0f1f;
-  align-self:flex-end;
+input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:none;
+  background:#1e1e2a;
+  color:white;
 }
 
-/* CALL SCREEN */
+.send,.voice{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#333;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+}
+
+/* CALL */
 .callScreen{
   position:fixed;
   inset:0;
-  background:linear-gradient(#000,#111);
+  background:#000;
   display:none;
   flex-direction:column;
   justify-content:center;
@@ -98,15 +122,14 @@ body{
 }
 
 .actions{
-  margin-top:25px;
+  margin-top:20px;
   display:flex;
-  gap:20px;
+  gap:15px;
 }
 
 .btn{
-  padding:12px 18px;
-  border-radius:30px;
-  font-weight:bold;
+  padding:10px 16px;
+  border-radius:20px;
   cursor:pointer;
 }
 
@@ -114,49 +137,55 @@ body{
 .decline{background:#e74c3c;}
 
 .endBtn{
-  margin-top:25px;
-  width:70px;
-  height:70px;
+  margin-top:20px;
+  width:60px;
+  height:60px;
   border-radius:50%;
   background:red;
   display:none;
   justify-content:center;
   align-items:center;
-  font-size:30px;
-  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="ring" src="ring.mp3" loop></audio>
+<audio id="ring" src="bogh.mp3"></audio>
 
 <!-- TOP -->
 <div class="top">
-
   <div class="profile">
     <div class="avatar"></div>
     <div>شوخی بی‌مزه</div>
   </div>
 
-  <div onclick="startCall()" style="cursor:pointer;font-size:18px;">📞</div>
-
+  <div style="cursor:pointer;font-size:18px;" onclick="startCall()">📞</div>
 </div>
 
 <!-- CHAT -->
 <div id="chat"></div>
 
+<!-- INPUT -->
+<div class="inputBox">
+  <div class="voice"
+       onmousedown="startRec()"
+       onmouseup="stopRec()"
+       ontouchstart="startRec()"
+       ontouchend="stopRec()">🎤</div>
+
+  <input id="text" placeholder="پیام بنویس...">
+  <div class="send" onclick="sendMsg()">➤</div>
+</div>
+
 <!-- CALL -->
 <div class="callScreen" id="callScreen">
 
   <div class="callAvatar">
-    <img src="dar.png">
+    <img src="jan.png">
   </div>
 
-  <div class="callText">
-    تماس ورودی از رز سفید
-  </div>
+  <div class="callText">در حال تماس با جوجه سیرکی...</div>
 
   <div class="actions" id="actions">
     <div class="btn answer" onclick="answerCall()">Answer</div>
@@ -175,7 +204,7 @@ const ring=document.getElementById("ring");
 let callStarted=false;
 let timeoutCall;
 
-/* CHAT FIXED */
+/* CHAT */
 const messages=[
 {type:"other",text:"هنوزم موقع عصبی شدن ناخن‌هاتو می‌جَوی؟"},
 {type:"me",text:"هنوزم موقع ترسیدن زیاد حرف می‌زنی؟"},
@@ -195,9 +224,17 @@ function render(){
   });
 }
 
-render();
+/* SEND TEXT */
+function sendMsg(){
+  const input=document.getElementById("text");
+  if(!input.value.trim()) return;
 
-/* AUTO CALL ONCE ONLY */
+  messages.push({type:"me",text:input.value});
+  input.value="";
+  render();
+}
+
+/* CALL (only once auto) */
 setTimeout(()=>{
   if(!callStarted){
     incomingCall();
@@ -205,7 +242,7 @@ setTimeout(()=>{
   }
 },2000);
 
-/* MANUAL CALL */
+/* manual call */
 function startCall(){
   if(!callStarted){
     incomingCall();
@@ -213,7 +250,6 @@ function startCall(){
   }
 }
 
-/* CALL */
 function incomingCall(){
   document.getElementById("callScreen").style.display="flex";
 
@@ -226,7 +262,7 @@ function incomingCall(){
 
   timeoutCall=setTimeout(()=>{
     endCall();
-  },6000);
+  },8000);
 }
 
 /* ANSWER */
@@ -247,6 +283,44 @@ function endCall(){
   ring.pause();
   clearTimeout(timeoutCall);
 }
+
+/* VOICE REC */
+let recorder;
+let chunks=[];
+
+async function startRec(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recorder=new MediaRecorder(stream);
+    chunks=[];
+
+    recorder.ondataavailable=e=>chunks.push(e.data);
+
+    recorder.onstop=()=>{
+      const blob=new Blob(chunks,{type:"audio/webm"});
+      const url=URL.createObjectURL(blob);
+
+      messages.push({
+        type:"me",
+        voice:url
+      });
+
+      render();
+    };
+
+    recorder.start();
+  }catch(e){
+    alert("اجازه میکروفون لازم است");
+  }
+}
+
+function stopRec(){
+  if(recorder && recorder.state!=="inactive"){
+    recorder.stop();
+  }
+}
+
+render();
 
 </script>
 
