@@ -10,6 +10,7 @@ body{
   margin:0;
   font-family:sans-serif;
   overflow:hidden;
+  touch-action:none; /* ✅ FIX SCROLL BEHAVIOR */
 }
 
 /* ===== WALLPAPER ===== */
@@ -37,6 +38,7 @@ body{
   flex:1;
   overflow-y:auto;
   padding:20px;
+  -webkit-overflow-scrolling:touch; /* ✅ smooth mobile scroll */
 }
 
 /* GRID */
@@ -123,7 +125,7 @@ body{
   <div id="appsWrapper">
     <div id="apps">
 
-      <div class="app" onclick="openApp('phone.html')">
+      <div class="app" onclick="openApp('telephone.html')">
         <div class="icon">📞</div>
         Phone
       </div>
@@ -216,7 +218,7 @@ body{
 
     <div class="dockIcon" onclick="openApp('camera.html')">📷</div>
     <div class="dockIcon" onclick="openApp('messages.html')">💬</div>
-    <div class="dockIcon" onclick="openApp('phone.html')">📞</div>
+    <div class="dockIcon" onclick="openApp('telephone.html')">📞</div>
 
   </div>
 
