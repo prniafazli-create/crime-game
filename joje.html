@@ -13,6 +13,48 @@ body{
   color:white;
 }
 
+/* TOP BAR */
+.top{
+  position:sticky;
+  top:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px;
+  background:rgba(20,20,30,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  background:#2b2b3a; /* دایره بدون عکس */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+}
+
+/* CALL BUTTONS */
+.callBox{
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  cursor:pointer;
+  font-size:18px;
+  opacity:0.8;
+}
+
 /* CHAT */
 #chat{
   padding:12px;
@@ -23,30 +65,15 @@ body{
   gap:10px;
 }
 
-/* MESSAGE */
 .msg{
   max-width:75%;
   padding:10px;
   border-radius:12px;
-  background:#3a0f1f;
+  font-size:14px;
 }
 
-/* ME */
-.me{
-  background:#1f1f2e;
-  align-self:flex-start;
-}
-
-/* OTHER */
-.other{
-  background:#3a0f1f;
-  align-self:flex-end;
-}
-
-/* VOICE */
-audio{
-  width:200px;
-}
+.me{background:#1f1f2e; align-self:flex-start;}
+.other{background:#3a0f1f; align-self:flex-end;}
 
 /* INPUT */
 .inputBox{
@@ -64,6 +91,7 @@ input{
   padding:10px;
   border-radius:20px;
   border:none;
+  outline:none;
 }
 
 .send,.voice{
@@ -77,7 +105,7 @@ input{
   cursor:pointer;
 }
 
-/* CALL */
+/* CALL SCREEN */
 .callScreen{
   position:fixed;
   inset:0;
@@ -122,29 +150,40 @@ input{
 
 <body>
 
-<audio id="ring" src="bogh.mp3"></audio>
+<audio id="ring" src="ring.mp3"></audio>
+<audio id="bogh" src="bogh.mp3"></audio>
+
+<!-- TOP -->
+<div class="top">
+
+  <div class="profile">
+    <div class="avatar">🐥</div>
+    <div>جوجه سیرکی</div>
+  </div>
+
+  <div class="callBox">
+    <div class="btn" onclick="startCall()">📞</div>
+    <div class="btn">🎥</div>
+  </div>
+
+</div>
 
 <!-- CHAT -->
 <div id="chat"></div>
 
 <!-- INPUT -->
 <div class="inputBox">
-
-  <!-- VOICE BUTTON -->
-  <div class="voice"
-       onmousedown="startRec()" 
-       onmouseup="stopRec()"
-       ontouchstart="startRec()"
-       ontouchend="stopRec()">🎤</div>
-
+  <div class="voice">🎤</div>
   <input id="text" placeholder="پیام بنویس...">
   <div class="send" onclick="sendMsg()">➤</div>
 </div>
 
-<!-- CALL -->
+<!-- CALL SCREEN -->
 <div class="callScreen" id="callScreen">
+
   <div class="callAvatar">📞</div>
-  <div>جوجه سیرکی در حال تماس...</div>
+  <div>در حال تماس با جوجه سیرکی...</div>
+
   <div class="endBtn" onclick="endCall()">✖</div>
 </div>
 
@@ -152,82 +191,74 @@ input{
 
 const chat=document.getElementById("chat");
 const ring=document.getElementById("ring");
+const bogh=document.getElementById("bogh");
 
-let recorder;
-let chunks=[];
 let autoCut;
 
-/* messages */
-function addMsg(type,content,voice=false){
+/* CHAT MESSAGES */
+function add(type,text){
   const div=document.createElement("div");
   div.className="msg "+type;
-
-  if(voice){
-    div.innerHTML=`🎧 ویس:<br><audio controls src="${content}"></audio>`;
-  }else{
-    div.innerHTML=content;
-  }
-
+  div.innerText=text;
   chat.appendChild(div);
   chat.scrollTop=chat.scrollHeight;
 }
 
-/* TEXT */
+/* INITIAL CHAT */
+add("other","داداش... میشه امشب تنها نمونه؟");
+add("me","از چی می‌ترسی؟");
+add("other","از تو نه...");
+
+/* SEND */
 function sendMsg(){
   const input=document.getElementById("text");
   if(!input.value.trim()) return;
 
-  addMsg("me",input.value);
+  add("me",input.value);
   input.value="";
 }
 
-/* VOICE REC */
-async function startRec(){
-  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-  recorder=new MediaRecorder(stream);
-  chunks=[];
-
-  recorder.ondataavailable=e=>chunks.push(e.data);
-
-  recorder.onstop=()=>{
-    const blob=new Blob(chunks,{type:"audio/webm"});
-    const url=URL.createObjectURL(blob);
-    addMsg("me",url,true);
-  };
-
-  recorder.start();
+/* VOICE (fake simple) */
+const voiceBtn=document.querySelector(".voice");
+voiceBtn.onclick=()=>{
+  add("me","🎤 پیام صوتی ارسال شد (دمو)");
 }
 
-function stopRec(){
-  if(recorder && recorder.state!=="inactive"){
-    recorder.stop();
-  }
-}
-
-/* CALL AUTO */
-setTimeout(()=>startCall(),2000);
-
+/* CALL */
 function startCall(){
+
   document.getElementById("callScreen").style.display="flex";
+
+  // ring sound
+  ring.currentTime=0;
   ring.play();
 
+  // vibration
   if(navigator.vibrate){
-    navigator.vibrate([300,200,300,200,300]);
+    navigator.vibrate([400,300,400]);
   }
 
+  // auto stop after 8 sec
   autoCut=setTimeout(endCall,8000);
 }
 
+/* END CALL */
 function endCall(){
+
   document.getElementById("callScreen").style.display="none";
+
   ring.pause();
+  bogh.pause();
   ring.currentTime=0;
+  bogh.currentTime=0;
+
   clearTimeout(autoCut);
 }
 
-/* INIT */
-addMsg("other","هنوزم موقع عصبی شدن ناخن‌هاتو می‌جَوی؟");
-addMsg("me","هنوزم موقع ترسیدن زیاد حرف می‌زنی؟");
+/* AUTO CALL AFTER 2 SEC */
+setTimeout(()=>{
+  startCall();
+},2000);
 
 </script>
 
