@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages</title>
+
+<style>
+body{
+  margin:0;
+  font-family: sans-serif;
+  background:#0b0b0f;
+  color:white;
+  direction: rtl;
+}
+
+/* HEADER */
+.header{
+  position:sticky;
+  top:0;
+  backdrop-filter: blur(12px);
+  background:rgba(20,20,30,0.6);
+  padding:12px;
+  text-align:center;
+  font-weight:bold;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+/* LIST */
+.list{
+  padding:10px;
+}
+
+.chat{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.05);
+  transition:0.2s;
+  cursor:pointer;
+  animation:fadeIn 0.4s ease;
+  direction: rtl;
+}
+
+.chat:hover{
+  background:rgba(255,255,255,0.1);
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* LEFT SIDE (AVATAR + TEXT) */
+.left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* 🔴 CIRCLE AVATAR */
+.avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+}
+
+/* TEXT */
+.name{
+  font-weight:bold;
+  text-align:right;
+}
+
+.preview{
+  font-size:12px;
+  opacity:0.7;
+  max-width:180px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-align:right;
+}
+
+/* UNREAD DOT */
+.dot{
+  width:8px;
+  height:8px;
+  background:red;
+  border-radius:50%;
+  margin-left:6px;
+  display:inline-block;
+}
+
+/* NOTIFICATION */
+.notif{
+  position:fixed;
+  top:-100px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(30,30,40,0.95);
+  padding:12px 18px;
+  border-radius:14px;
+  width:85%;
+  max-width:320px;
+  transition:0.5s;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.notif.show{
+  top:20px;
+}
+
+.notif-title{
+  font-weight:bold;
+  font-size:13px;
+  text-align:right;
+}
+
+.notif-text{
+  font-size:12px;
+  opacity:0.8;
+  text-align:right;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header" id="time"></div>
+
+<!-- NOTIF -->
+<div class="notif" id="notif">
+  <div class="notif-title">پیام جدید</div>
+  <div class="notif-text">کسایی که بعد از آشنایی با تو ناپدید شدن.</div>
+</div>
+
+<div class="list">
+
+  <div class="chat" onclick="openChat('tash.html')">
+    <div class="left">
+      <div class="avatar" style="background:#ff4d6d;"></div>
+      <div>
+        <div class="name">ملکه تشویق</div>
+        <div class="preview">ولی من نه! هنوز اون کل کاغذی رو دارم</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat" onclick="openChat('joje.html')">
+    <div class="left">
+      <div class="avatar" style="background:#ffa502;"></div>
+      <div>
+        <div class="name">جوجه سیرکی</div>
+        <div class="preview">از تو نه سین نخورده</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat" onclick="openChat('nazm.html')">
+    <div class="left">
+      <div class="avatar" style="background:#1e90ff;"></div>
+      <div>
+        <div class="name">مسئول نظم</div>
+        <div class="preview">قول نمی دم</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat" onclick="openChat('dall.html')">
+    <div class="left">
+      <div class="avatar" style="background:#2ed573;"></div>
+      <div>
+        <div class="name">عروسک خرسی</div>
+        <div class="preview">قوللللل🐰</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat" onclick="openChat('joke.html')">
+    <div class="left">
+      <div class="avatar" style="background:#a55eea;"></div>
+      <div>
+        <div class="name">شوخی بی‌مزه</div>
+        <div class="preview">کسایی که بعد از آشنایی با تو ناپدید شدن</div>
+        <span class="dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat" onclick="openChat('unknown.html')">
+    <div class="left">
+      <div class="avatar" style="background:#57606f;"></div>
+      <div>
+        <div class="name">پیک ناشناس</div>
+        <div class="preview">تاریخچه پیام پاک شده</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat" onclick="openChat('no.html')">
+    <div class="left">
+      <div class="avatar" style="background:#ff4757;"></div>
+      <div>
+        <div class="name">°00</div>
+        <div class="preview">فقط بعضی ها قایم میشن</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat" onclick="openChat('rose.html')">
+    <div class="left">
+      <div class="avatar" style="background:#f8c291;"></div>
+      <div>
+        <div class="name">گل سفید</div>
+        <div class="preview">دیر گفتی</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+/* TIME */
+function updateTime(){
+  const d = new Date();
+  document.getElementById("time").innerText =
+    d.toLocaleDateString("fa-IR") + " — " +
+    d.toLocaleTimeString("fa-IR",{hour:"2-digit",minute:"2-digit"});
+}
+setInterval(updateTime,1000);
+updateTime();
+
+/* NAV */
+function openChat(url){
+  window.location.href = url;
+}
+
+/* NOTIFICATION AFTER 2s */
+setTimeout(()=>{
+  document.getElementById("notif").classList.add("show");
+},2000);
+
+</script>
+
+</body>
+</html>
