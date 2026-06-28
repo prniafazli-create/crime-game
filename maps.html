@@ -10,17 +10,24 @@
 <style>
 html,body{
   margin:0;
+  padding:0;
   height:100%;
-  background:#000;
+  width:100%;
   overflow:hidden;
+  background:#000;
   font-family:sans-serif;
 }
 
+/* نقشه تمام صفحه */
 #map{
-  width:100%;
-  height:100%;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
 }
 
+/* نوتیف */
 #notif{
   position:absolute;
   top:15px;
@@ -36,6 +43,7 @@ html,body{
   font-size:13px;
 }
 
+/* پنل معما */
 #panel{
   position:absolute;
   top:15px;
@@ -58,9 +66,18 @@ input,button{
   outline:none;
 }
 
-input{background:#111;color:#fff;}
-button{background:red;color:#fff;cursor:pointer;}
+input{
+  background:#111;
+  color:#fff;
+}
 
+button{
+  background:red;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* سرچ */
 #searchBox{
   position:absolute;
   top:15px;
@@ -75,12 +92,7 @@ button{background:red;color:#fff;cursor:pointer;}
   border:1px solid #333;
 }
 
-.red-line{
-  stroke:red;
-  stroke-width:4;
-  filter: drop-shadow(0 0 6px red);
-}
-
+/* مقصد */
 .destination-label{
   background:rgba(0,0,0,0.7);
   color:#fff;
@@ -88,6 +100,13 @@ button{background:red;color:#fff;cursor:pointer;}
   border:1px solid red;
   border-radius:8px;
   font-size:12px;
+}
+
+/* مسیر */
+.red-line{
+  stroke:red;
+  stroke-width:4;
+  filter: drop-shadow(0 0 6px red);
 }
 </style>
 </head>
@@ -120,14 +139,12 @@ const fakeQueries = [
   "داده در حال رمزگشایی است...",
   "اتصال غیرمجاز ثبت شد",
   "ردیابی در حال اجراست...",
-  "موقعیت در حال پنهان‌سازی است...",
-  "هیچ داده‌ای تطبیق ندارد"
+  "هیچ داده‌ای یافت نشد",
+  "سیستم در حالت ناشناخته"
 ];
 
-// ================= INIT MAP =================
-function initMap(img){
-
-  if(map) map.remove();
+// ================= MAP INIT =================
+function initMap(){
 
   const W = 4000;
   const H = 4000;
@@ -136,9 +153,11 @@ function initMap(img){
     crs: L.CRS.Simple,
     minZoom: -2,
     maxZoom: 3,
+
     zoomControl: true,
-    dragging: false,
-    scrollWheelZoom: true,
+
+    dragging: false,        // ❌ حرکت ممنوع
+    scrollWheelZoom: true,  // ✔ زوم
     doubleClickZoom: false,
     boxZoom: false,
     keyboard: false
@@ -146,7 +165,7 @@ function initMap(img){
 
   const bounds = [[0,0],[H,W]];
 
-  L.imageOverlay(img, bounds).addTo(map);
+  L.imageOverlay("map.png", bounds).addTo(map);
 
   map.fitBounds(bounds);
   map.setMaxBounds(bounds);
@@ -157,7 +176,7 @@ function initMap(img){
 // ================= PUZZLE =================
 function setupPuzzle(){
 
-  const point = L.latLng(800, 800);
+  const point = L.latLng(900, 900);
 
   L.circleMarker(point,{
     radius:8,
@@ -173,7 +192,7 @@ function notify(t){
   setTimeout(()=>n.style.display="none",2000);
 }
 
-// ================= CHECK ANSWER =================
+// ================= CHECK =================
 function check(){
   if(solved) return;
 
@@ -188,7 +207,7 @@ function check(){
 
     drawPath();
   } else {
-    notify("❌ پاسخ اشتباه است");
+    notify("❌ پاسخ اشتباه");
   }
 }
 
@@ -198,8 +217,8 @@ function drawPath(){
   const center = [2000, 2000];
 
   const path = [
-    [800,800],
-    [1200,1400],
+    [900,900],
+    [1300,1500],
     [1700,1800],
     center
   ];
@@ -229,9 +248,9 @@ function drawPath(){
 function fakeSearch(v){
   if(v.length > 2){
 
-    const msg = fakeQueries[Math.floor(Math.random()*fakeQueries.length)];
-
     history.push(v);
+
+    const msg = fakeQueries[Math.floor(Math.random()*fakeQueries.length)];
 
     notify("🔎 " + msg);
 
@@ -240,7 +259,7 @@ function fakeSearch(v){
 }
 
 // ================= START =================
-initMap("map.jpg");
+initMap();
 
 </script>
 
