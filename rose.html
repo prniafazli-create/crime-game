@@ -268,7 +268,7 @@ const messages=[
 {type:"me",text:"فقط یک دونه؟",time:"09:04"},
 {type:"other",text:"جدی میگم.",time:"09:05"},
 {type:"me",text:"باشه.",time:"09:05"},
-{type:"other",text:"تو این شماره رو از کجا پیدا کردی؟",time:"09:06"},
+{type:"other",text:"تو این شماره رو از کجا پیدا کردی?",time:"09:06"},
 {type:"me",text:"از همون جایی که آدم‌ها چیزای مهمشون رو پنهان می‌کنن.",time:"09:06"},
 {type:"other",text:"این جواب نیست.",time:"09:07"},
 {type:"me",text:"می‌دونم.",time:"09:07"},
@@ -276,7 +276,7 @@ const messages=[
 {type:"me",text:"پس معلومه خوب قایمش کرده بودی.",time:"09:08"},
 {type:"other",text:"...",time:"09:09"},
 {type:"other",text:"گاهی واقعاً نمی‌فهمم تو باید نگرانم کنی یا نه.",time:"09:10"},
-{type:"me",text:"و به چی رسیدی؟",time:"09:10"},
+{type:"me",text:"و به چی رسیدی?",time:"09:10"},
 {type:"other",text:"به اینکه اگه آدم‌ها رو فقط با عجیب بودنشون قضاوت کنیم، نصف دنیا باید تنها بمونه.",time:"09:11"},
 {type:"me",text:"تو زیادی به آدم‌ها فرصت میدی.",time:"09:11"},
 {type:"other",text:"و تو زیادی زود خودتو ازشون محروم می‌کنی.",time:"09:12"},
@@ -316,7 +316,7 @@ chat.scrollTop=chat.scrollHeight;
 
 render();
 
-/* SEND MESSAGE */
+/* SEND */
 function sendMsg(){
 const input=document.getElementById("text");
 if(input.value.trim()=="") return;
@@ -377,7 +377,6 @@ time:new Date().getHours()+":"+String(new Date().getMinutes()).padStart(2,"0")
 });
 
 render();
-
 stream.getTracks().forEach(t=>t.stop());
 };
 
@@ -392,31 +391,7 @@ if(recorder && recorder.state!=="inactive"){
 recorder.stop();
 }
 }
+</script>
 
-/* TYPING + MESSAGE EVENT */
-function showTypingThenReply(){
-
-const typing=document.createElement("div");
-typing.className="msg other";
-typing.innerHTML="<i>در حال نوشتن...</i>";
-typing.id="typing";
-
-chat.appendChild(typing);
-chat.scrollTop=chat.scrollHeight;
-
-setTimeout(()=>{
-
-document.getElementById("typing")?.remove();
-
-ding.play().catch(()=>{});
-
-messages.push({
-type:"other",
-text:"پررو نشو",
-time:new Date().getHours()+":"+String(new Date().getMinutes()).padStart(2,"0")
-});
-
-render();
-
-},4000);
-}
+</body>
+</html>
