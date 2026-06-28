@@ -393,6 +393,34 @@ if(recorder && recorder.state!=="inactive"){
 recorder.stop();
 }
 }
+ function fakeReplyWithTyping(){
+
+const typing=document.createElement("div");
+typing.className="msg other";
+typing.innerHTML="<i>در حال نوشتن...</i>";
+typing.id="typingBox";
+
+chat.appendChild(typing);
+chat.scrollTop=chat.scrollHeight;
+
+setTimeout(()=>{
+
+document.getElementById("typingBox")?.remove();
+
+ding.currentTime=0;
+ding.play().catch(()=>{});
+
+messages.push({
+type:"other",
+text:"پررو نشو",
+time:new Date().getHours()+":"+String(new Date().getMinutes()).padStart(2,"0")
+});
+
+render();
+
+},1000);
+
+} 
 function fakeReplyWithTyping(){
 
 const typing=document.createElement("div");
