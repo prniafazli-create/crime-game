@@ -514,33 +514,6 @@ chat.scrollTop=chat.scrollHeight;
 /* نمایش اولیه */
 render();
 
-/* ارسال پیام */
-
-function sendMsg(){
-
-const input=document.getElementById("text");
-
-if(input.value.trim()=="") return;
-
-const now=new Date();
-
-messages.push({
-
-type:"me",
-
-text:input.value,
-
-time:
-now.getHours()+":"+
-String(now.getMinutes()).padStart(2,"0")
-
-});
-
-input.value="";
-
-/* نمایش اولیه */
-render();
-
 setTimeout(()=>{
 
 const typing=document.createElement("div");
@@ -573,6 +546,33 @@ render();
 
 function sendMsg(){
 
+/* ارسال پیام */
+
+function sendMsg(){
+
+const input=document.getElementById("text");
+
+if(input.value.trim()=="") return;
+
+const now=new Date();
+
+messages.push({
+
+type:"me",
+
+text:input.value,
+
+time:
+now.getHours()+":"+
+String(now.getMinutes()).padStart(2,"0")
+
+});
+
+input.value="";
+
+render();
+
+}
 
 /* تماس صوتی */
 
