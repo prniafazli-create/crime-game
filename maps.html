@@ -1,216 +1,248 @@
-<!DOCTYPE html>  <html lang="fa" dir="rtl">  
-<head>  
-<meta charset="UTF-8">  
-<title>Image Map - Unknown Signal</title>  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>  
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>  <style>  
-html,body{  
-  margin:0;  
-  height:100%;  
-  background:#000;  
-  overflow:hidden;  
-  font-family:sans-serif;  
-}  
-  
-/* نقشه */  
-#map{  
-  width:100%;  
-  height:100%;  
-}  
-  
-/* نوتیف */  
-#notif{  
-  position:absolute;  
-  top:15px;  
-  left:50%;  
-  transform:translateX(-50%);  
-  background:rgba(0,0,0,0.85);  
-  border:1px solid red;  
-  color:#fff;  
-  padding:10px 15px;  
-  border-radius:10px;  
-  display:none;  
-  z-index:9999;  
-  font-size:13px;  
-}  
-  
-/* پنل معما بالا چپ */  
-#panel{  
-  position:absolute;  
-  top:15px;  
-  left:15px;  
-  width:220px;  
-  background:rgba(0,0,0,0.75);  
-  border:1px solid #222;  
-  border-radius:12px;  
-  padding:12px;  
-  color:#fff;  
-  z-index:9999;  
-  font-size:13px;  
-}  
-  
-input,button{  
-  width:100%;  
-  margin-top:8px;  
-  padding:8px;  
-  border-radius:8px;  
-  border:none;  
-  outline:none;  
-}  
-  
-input{  
-  background:#111;  
-  color:#fff;  
-}  
-  
-button{  
-  background:red;  
-  color:#fff;  
-  cursor:pointer;  
-}  
-  
-/* سرچ جعلی */  
-#searchBox{  
-  position:absolute;  
-  top:15px;  
-  right:15px;  
-  width:200px;  
-  z-index:9999;  
-}  
-  
-#searchBox input{  
-  background:#111;  
-  color:#fff;  
-  border:1px solid #333;  
-}  
-  
-/* مقصد */  
-.destination-label{  
-  background:rgba(0,0,0,0.7);  
-  color:#fff;  
-  padding:5px 8px;  
-  border:1px solid red;  
-  border-radius:8px;  
-  font-size:12px;  
-}  
-  
-/* مسیر قرمز */  
-.red-line{  
-  stroke:red;  
-  stroke-width:4;  
-  opacity:0.9;  
-  filter: drop-shadow(0 0 6px red);  
-}  
-</style>  </head>  <body>  <div id="notif"></div>  <div id="panel">  
-  🧩 معما<br>  
-  <small>او با چه کسی اینجا بوده؟</small>  
-  <input id="ans" placeholder="پاسخ...">  
-  <button onclick="check()">تأیید</button>  
-</div>  <div id="searchBox">  
-  <input placeholder="جستجو..." oninput="fakeSearch(this.value)">  
-</div>  <div id="map"></div>  <script>  
-  
-// ================= IMAGE MAP =================  
-const MAP_IMAGE = "map.png"; // 👈 عکس خودت اینجا  
-  
-// اندازه فرضی نقشه (بعداً اگر خواستی دقیق می‌کنم)  
-const W = 2000;  
-const H = 2000;  
-  
-// ساخت نقشه بدون اینترنت  
-const map = L.map('map', {  
-  crs: L.CRS.Simple,  
-  minZoom: -2,  
-  maxZoom: 2,  
-  zoomControl: true  
-});  
-  
-const bounds = [[0,0],[H,W]];  
-  
-// تصویر به عنوان نقشه  
-L.imageOverlay(MAP_IMAGE, bounds).addTo(map);  
-map.fitBounds(bounds);  
-  
-// ================= NOTIF =================  
-function notify(t){  
-  const n = document.getElementById("notif");  
-  n.innerText = t;  
-  n.style.display = "block";  
-  setTimeout(()=>n.style.display="none",2000);  
-}  
-  
-// ================= PUZZLE (TOP LEFT) =================  
-const puzzlePoint = L.latLng(250, 250);  
-  
-const puzzleMarker = L.circleMarker(puzzlePoint,{  
-  radius:8,  
-  color:"red"  
-}).addTo(map).bindPopup("🧩 نقطه معما");  
-  
-// ================= ANSWER =================  
-let solved = false;  
-  
-function check(){  
-  if(solved) return;  
-  
-  const v = document.getElementById("ans").value.trim();  
-  
-  if(v === "میتسوکی" || v === "میتسوکی آمانه"){  
-    solved = true;  
-    notify("✔ سیگنال تأیید شد");  
-    drawPath();  
-  } else {  
-    notify("❌ اشتباه");  
-  }  
-}  
-  
-// ================= PATH =================  
-function drawPath(){  
-  
-  const center = [1000, 1000];  
-  
-  const path = [  
-    [250,250],   // کنار معما  
-    [500,600],  
-    [800,900],  
-    center  
-  ];  
-  
-  L.polyline(path,{  
-    color:"red",  
-    weight:4,  
-    className:"red-line"  
-  }).addTo(map);  
-  
-  // نقطه مقصد  
-  L.circleMarker(center,{  
-    radius:10,  
-    color:"red"  
-  }).addTo(map);  
-  
-  L.marker(center,{  
-    icon: L.divIcon({  
-      className:"destination-label",  
-      html:"📍 مقصد نامشخص"  
-    })  
-  }).addTo(map);  
-  
-  notify("📍 مسیر فعال شد...");  
-}  
-  
-// ================= FAKE SEARCH =================  
-const fakeQueries = [  
-  "signal://unknown/route",  
-  "user://ghost_trace_91",  
-  "map.cache corrupted...",  
-  "entry: null location",  
-  "?? connection lost ??"  
-];  
-  
-function fakeSearch(v){  
-  if(v.length > 2){  
-    notify(fakeQueries[Math.floor(Math.random()*fakeQueries.length)]);  
-  }  
-}  
-  
-</script>  </body>  
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Unknown Signal Map</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+html,body{
+  margin:0;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family:sans-serif;
+}
+
+#map{
+  width:100%;
+  height:100%;
+}
+
+#notif{
+  position:absolute;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.85);
+  border:1px solid red;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:10px;
+  display:none;
+  z-index:9999;
+  font-size:13px;
+}
+
+#panel{
+  position:absolute;
+  top:15px;
+  left:15px;
+  width:230px;
+  background:rgba(0,0,0,0.75);
+  border-radius:12px;
+  padding:12px;
+  color:#fff;
+  z-index:9999;
+  font-size:13px;
+}
+
+input,button{
+  width:100%;
+  margin-top:8px;
+  padding:8px;
+  border-radius:8px;
+  border:none;
+  outline:none;
+}
+
+input{background:#111;color:#fff;}
+button{background:red;color:#fff;cursor:pointer;}
+
+#searchBox{
+  position:absolute;
+  top:15px;
+  right:15px;
+  width:200px;
+  z-index:9999;
+}
+
+#searchBox input{
+  background:#111;
+  color:#fff;
+  border:1px solid #333;
+}
+
+.red-line{
+  stroke:red;
+  stroke-width:4;
+  filter: drop-shadow(0 0 6px red);
+}
+
+.destination-label{
+  background:rgba(0,0,0,0.7);
+  color:#fff;
+  padding:5px 8px;
+  border:1px solid red;
+  border-radius:8px;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="notif"></div>
+
+<div id="panel">
+  🧩 معما<br>
+  <small>او با چه کسی اینجا بوده؟</small>
+  <input id="ans" placeholder="پاسخ...">
+  <button onclick="check()">تأیید</button>
+</div>
+
+<div id="searchBox">
+  <input placeholder="جستجو..." oninput="fakeSearch(this.value)">
+</div>
+
+<div id="map"></div>
+
+<script>
+
+let map;
+let solved = false;
+let history = [];
+
+const fakeQueries = [
+  "سیگنال ناشناخته شناسایی شد...",
+  "داده در حال رمزگشایی است...",
+  "اتصال غیرمجاز ثبت شد",
+  "ردیابی در حال اجراست...",
+  "موقعیت در حال پنهان‌سازی است...",
+  "هیچ داده‌ای تطبیق ندارد"
+];
+
+// ================= INIT MAP =================
+function initMap(img){
+
+  if(map) map.remove();
+
+  const W = 4000;
+  const H = 4000;
+
+  map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: -2,
+    maxZoom: 3,
+    zoomControl: true,
+    dragging: false,
+    scrollWheelZoom: true,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false
+  });
+
+  const bounds = [[0,0],[H,W]];
+
+  L.imageOverlay(img, bounds).addTo(map);
+
+  map.fitBounds(bounds);
+  map.setMaxBounds(bounds);
+
+  setupPuzzle();
+}
+
+// ================= PUZZLE =================
+function setupPuzzle(){
+
+  const point = L.latLng(800, 800);
+
+  L.circleMarker(point,{
+    radius:8,
+    color:"red"
+  }).addTo(map).bindPopup("🧩 نقطه معما");
+}
+
+// ================= NOTIF =================
+function notify(t){
+  const n = document.getElementById("notif");
+  n.innerText = t;
+  n.style.display = "block";
+  setTimeout(()=>n.style.display="none",2000);
+}
+
+// ================= CHECK ANSWER =================
+function check(){
+  if(solved) return;
+
+  const v = document.getElementById("ans").value.trim();
+
+  if(v === "میتسوکی" || v === "میتسوکی آمانه"){
+    solved = true;
+
+    notify("✔ سیگنال تأیید شد");
+
+    document.getElementById("panel").style.display = "none";
+
+    drawPath();
+  } else {
+    notify("❌ پاسخ اشتباه است");
+  }
+}
+
+// ================= PATH =================
+function drawPath(){
+
+  const center = [2000, 2000];
+
+  const path = [
+    [800,800],
+    [1200,1400],
+    [1700,1800],
+    center
+  ];
+
+  L.polyline(path,{
+    color:"red",
+    weight:4,
+    className:"red-line"
+  }).addTo(map);
+
+  L.circleMarker(center,{
+    radius:10,
+    color:"red"
+  }).addTo(map);
+
+  L.marker(center,{
+    icon: L.divIcon({
+      className:"destination-label",
+      html:"📍 مقصد نامشخص"
+    })
+  }).addTo(map);
+
+  notify("📍 مسیر فعال شد...");
+}
+
+// ================= SEARCH =================
+function fakeSearch(v){
+  if(v.length > 2){
+
+    const msg = fakeQueries[Math.floor(Math.random()*fakeQueries.length)];
+
+    history.push(v);
+
+    notify("🔎 " + msg);
+
+    console.log("History:", history);
+  }
+}
+
+// ================= START =================
+initMap("map.jpg");
+
+</script>
+
+</body>
 </html>
