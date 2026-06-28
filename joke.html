@@ -48,7 +48,8 @@ gap:10px;
 width:38px;
 height:38px;
 border-radius:50%;
-object-fit:cover;
+background:#FFD54A;
+flex-shrink:0;
 }
 
 .name{
@@ -193,14 +194,8 @@ z-index:99999;
 width:145px;
 height:145px;
 border-radius:50%;
-overflow:hidden;
+background:#FFD54A;
 border:2px solid rgba(255,255,255,.12);
-}
-
-.callAvatar img{
-width:100%;
-height:100%;
-object-fit:cover;
 }
 
 .callName{
@@ -240,7 +235,7 @@ cursor:pointer;
 
 <div class="profile">
 
-<div class="avatar" style="background:#FFD54A;"></div>
+<div class="avatar"></div>
 
 <div class="name">
 شوخی بی مزه
@@ -282,9 +277,12 @@ onclick="sendMsg()">
 
 </div>
 
-<div class="callAvatar" style="background:#FFD54A;"></div>
+<div id="callScreen">
+
+<div class="callAvatar"></div>
+
 <div class="callName">
-شوخی بی مزه
+مسئول نظم
 </div>
 
 <div class="callState">
@@ -308,38 +306,20 @@ const messages=[
 
 {
 type:"other",
-text:"هنوزم موقع عصبی شدن ناخن‌هاتو می‌جَوی؟",
-time:"20:10"
+text:"جلسه فردا ساعت ۹.",
+time:"09:00"
+},
+
+{
+type:"other",
+text:"لطفاً این بار مست نباش.",
+time:"09:01"
 },
 
 {
 type:"me",
-text:"هنوزم موقع ترسیدن زیاد حرف می‌زنی؟",
-time:"20:11"
-},
-
-{
-type:"other",
-text:"نه.",
-time:"20:11"
-},
-
-{
-type:"other",
-text:"الان فقط می‌شمرم.",
-time:"20:12"
-},
-
-{
-type:"me",
-text:"چی رو؟",
-time:"20:13"
-},
-
-{
-type:"other",
-text:"کسایی که بعد از آشنایی با تو ناپدید شدن.",
-time:"20:14"
+text:"قول نمی‌دم.",
+time:"09:02"
 }
 
 ];
